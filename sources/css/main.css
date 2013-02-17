@@ -7,16 +7,6 @@ body {
     background: #1e1e1e;
 }
 
-#panel-center {
-    margin: 0;
-    position: absolute;
-    z-index: 20;
-    top: 0;
-    bottom: 0;
-    left: 200px;
-    right: 400px;
-}
-
 #panel-left {
     margin: 0;
     position: absolute;
@@ -39,6 +29,7 @@ body {
     left: 50%;
 
     background: #191919;
+    border-left: 1px solid #111111;
 }
 
 #editor, #viewer { 

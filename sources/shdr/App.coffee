@@ -4,6 +4,7 @@ class App
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
     @editor.setTheme("ace/theme/monokai")
+    @editor.getSession().setTabSize(2)
     @editor.getSession().setMode("ace/mode/glsl")
     @viewer = new shdr.Viewer(domCanvas)
     @editor.getSession().setValue(@viewer.fs)
