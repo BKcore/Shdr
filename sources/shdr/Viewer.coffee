@@ -38,6 +38,7 @@ class Viewer
     @scene.add(@model)
 
   updateShader: (fs) ->
+    @fs = fs
     @material.fragmentShader = fs
     @material.needsUpdate = true
 

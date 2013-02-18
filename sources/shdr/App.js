@@ -4,7 +4,22 @@
 
   App = (function() {
 
-    function App(domEditor, domCanvas) {
+    App.UPDATE_ALL = 1;
+
+    App.UPDATE_ENTER = 2;
+
+    App.UPDATE_MANUAL = 3;
+
+    function App(domEditor, domCanvas, conf) {
+      var eventType,
+        _this = this;
+      if (conf == null) {
+        conf = {};
+      }
+      this.conf = {
+        update: App.UPDATE_ALL
+      };
+      this.extend(this.conf, conf);
       this.editor = ace.edit(domEditor);
       this.editor.setFontSize("16px");
       this.editor.setTheme("ace/theme/monokai");
@@ -12,6 +27,10 @@
       this.editor.getSession().setMode("ace/mode/glsl");
       this.viewer = new shdr.Viewer(domCanvas);
       this.editor.getSession().setValue(this.viewer.fs);
+      eventType = this.conf.update === App.UPDATE_MANUAL ? 'keydown' : 'keyup';
+      this.byId(domEditor).addEventListener(eventType, (function(e) {
+        return _this.onEditorKey(e);
+      }), false);
       this.loop();
     }
 
@@ -25,6 +44,51 @@
 
     App.prototype.update = function() {
       return this.viewer.update();
+    };
+
+    App.prototype.onEditorKey = function(e) {
+      var bubble, update, _ref;
+      _ref = this.needsUpdate(e.keyCode, e.ctrlKey, e.altKey), update = _ref[0], bubble = _ref[1];
+      if (update) {
+        this.viewer.updateShader(this.editor.getSession().getValue());
+        if (!bubble) {
+          e.cancelBubble = true;
+          e.returnValue = false;
+          if (typeof e.stopPropagation === "function") {
+            e.stopPropagation();
+          }
+          if (typeof e.preventDefault === "function") {
+            e.preventDefault();
+          }
+        }
+        return bubble;
+      } else {
+        return true;
+      }
+    };
+
+    App.prototype.needsUpdate = function(key, ctrl, alt) {
+      switch (this.conf.update) {
+        case App.UPDATE_ENTER:
+          return [key === 13, true];
+        case App.UPDATE_MANUAL:
+          return [ctrl && key === 83, false];
+        default:
+          return [true, true];
+      }
+    };
+
+    App.prototype.byId = function(id) {
+      return document.getElementById(id);
+    };
+
+    App.prototype.extend = function(object, properties) {
+      var key, val;
+      for (key in properties) {
+        val = properties[key];
+        object[key] = val;
+      }
+      return object;
     };
 
     return App;

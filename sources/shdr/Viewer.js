@@ -58,6 +58,7 @@
     };
 
     Viewer.prototype.updateShader = function(fs) {
+      this.fs = fs;
       this.material.fragmentShader = fs;
       return this.material.needsUpdate = true;
     };
