@@ -4,13 +4,13 @@ class Viewer
     @time = 0.0
     @renderer = new THREE.WebGLRenderer(antialias: true)
     @dom.appendChild(@renderer.domElement)
-    @material = @defaultMaterial()
     @scene = new THREE.Scene()
     @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 3000)
     @controls = new THREE.OrbitControls(@camera, @dom)
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()
-    @loadModel('models/monkey_high.js')
+    @material = @defaultMaterial()
+    @loadModel('models/hexmkii.js')
     @onResize()
     window.addEventListener('resize', (() => @onResize()), off)
 
@@ -27,6 +27,9 @@ class Viewer
       @camera.updateProjectionMatrix()
       @camera.position.z = 900/@dom.clientWidth*4
       @camera.lookAt(@scene.position)
+    if @uniforms
+      @uniforms.resolution.value.x = @dom.clientWidth
+      @uniforms.resolution.value.y = @dom.clientHeight
     @renderer.setSize(@dom.clientWidth, @dom.clientHeight)
 
   loadModel: (path) ->
@@ -43,22 +46,30 @@ class Viewer
 
   defaultMaterial: ->
     @uniforms = {
-      time: {type: 'f', value: 0.0}
+      time: {type: 'f', value: 0.0},
+      camera: {type: 'v3', value: @camera.position}
+      resolution: {type: 'v2', value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)}
     }
     @vs = [
+      'uniform vec3 camera;'
+      'varying vec3 fCamera;'
       'varying vec3 fNormal;'
-      'varying vec4 fPosition;'
+      'varying vec3 fPosition;'
+      'varying vec3 fVPosition;'
       'void main()'
       '{'
       'fNormal = normalMatrix * normal;'
-      'fPosition = projectionMatrix * modelViewMatrix * vec4(position, 1.0);'
-      'gl_Position = fPosition;'
+      'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;'
+      'fVPosition = position;'
+      'fCamera = (modelMatrix * vec4(camera, 1.0)).xyz;'
+      'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);'
       '}'
     ].join("\n")
     @fs = [
       'uniform float time;'
+      'varying vec3 fPosition;'
       'varying vec3 fNormal;'
-      'varying vec4 fPosition;'
+      'varying vec3 fCamera;'
       'void main()'
       '{'
       '  gl_FragColor = vec4(fNormal, 1.0);'
