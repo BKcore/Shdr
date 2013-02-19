@@ -4,18 +4,18 @@
 
   Viewer = (function() {
 
-    function Viewer(domCanvas) {
+    function Viewer(dom) {
       var _this = this;
+      this.dom = dom;
       this.time = 0.0;
-      this.dom = $('#' + domCanvas);
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
-      this.dom.append(this.renderer.domElement);
+      this.dom.appendChild(this.renderer.domElement);
       this.material = this.defaultMaterial();
       this.scene = new THREE.Scene();
-      this.camera = new THREE.PerspectiveCamera(35, this.dom.width() / this.dom.height(), 1, 3000);
-      this.controls = new THREE.OrbitControls(this.camera, this.dom[0]);
+      this.camera = new THREE.PerspectiveCamera(35, this.dom.clientWidth / this.dom.clientHeight, 1, 3000);
+      this.controls = new THREE.OrbitControls(this.camera, this.dom);
       this.scene.add(this.camera);
       this.loader = new THREE.JSONLoader();
       this.loadModel('models/monkey_high.js');
@@ -37,12 +37,12 @@
 
     Viewer.prototype.onResize = function() {
       if (this.camera) {
-        this.camera.aspect = this.dom.width() / this.dom.height();
+        this.camera.aspect = this.dom.clientWidth / this.dom.clientHeight;
         this.camera.updateProjectionMatrix();
-        this.camera.position.z = 900 / this.dom.width() * 4;
+        this.camera.position.z = 900 / this.dom.clientWidth * 4;
         this.camera.lookAt(this.scene.position);
       }
-      return this.renderer.setSize(this.dom.width(), this.dom.height());
+      return this.renderer.setSize(this.dom.clientWidth, this.dom.clientHeight);
     };
 
     Viewer.prototype.loadModel = function(path) {

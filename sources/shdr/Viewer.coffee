@@ -1,19 +1,18 @@
 class Viewer
 
-  constructor: (domCanvas) ->
+  constructor: (@dom) ->
     @time = 0.0
-    @dom = $('#'+domCanvas)
     @renderer = new THREE.WebGLRenderer(antialias: true)
-    @dom.append(@renderer.domElement)
+    @dom.appendChild(@renderer.domElement)
     @material = @defaultMaterial()
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera(35, @dom.width()/@dom.height(), 1, 3000)
-    @controls = new THREE.OrbitControls(@camera, @dom[0])
+    @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 3000)
+    @controls = new THREE.OrbitControls(@camera, @dom)
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()
     @loadModel('models/monkey_high.js')
     @onResize()
-    window.addEventListener('resize', (() => @onResize()), off);
+    window.addEventListener('resize', (() => @onResize()), off)
 
   update: ->
     @controls.update()
@@ -24,11 +23,11 @@ class Viewer
 
   onResize: ->
     if @camera
-      @camera.aspect = @dom.width()/@dom.height()
-      @camera.updateProjectionMatrix();
-      @camera.position.z = 900/@dom.width()*4;
+      @camera.aspect = @dom.clientWidth/@dom.clientHeight
+      @camera.updateProjectionMatrix()
+      @camera.position.z = 900/@dom.clientWidth*4
       @camera.lookAt(@scene.position)
-    @renderer.setSize(@dom.width(), @dom.height())
+    @renderer.setSize(@dom.clientWidth, @dom.clientHeight)
 
   loadModel: (path) ->
     @loader.load(path, ((g) => @addModel(g)))

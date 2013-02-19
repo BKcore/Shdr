@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
   </style>
 </head>
-<body>
+<body onload="init();">
 
 <div id="panel-left">
 	<div id="editor"></div>
@@ -19,10 +19,8 @@
 	<div id="viewer"></div>
 </div>
 	
-<script src="libs/jquery-1.8.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/three.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/three.orbit.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/bkcore/Timer.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="shdr/Viewer.js" type="text/javascript" charset="utf-8"></script>
@@ -30,10 +28,10 @@
 
 <script>
 
-	$(function() {
+	function init() {
 		var app = new shdr.App("editor", "viewer");
 		window.app = app;
-  }); 
+  } 
 
 </script>
 
