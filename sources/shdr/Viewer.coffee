@@ -11,7 +11,7 @@ class Viewer
     @controls = new THREE.OrbitControls(@camera, @dom[0])
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()
-    @loadModel('models/monkey_mid.js')
+    @loadModel('models/monkey_high.js')
     @onResize()
     window.addEventListener('resize', (() => @onResize()), off);
 

@@ -18,7 +18,7 @@
       this.controls = new THREE.OrbitControls(this.camera, this.dom[0]);
       this.scene.add(this.camera);
       this.loader = new THREE.JSONLoader();
-      this.loadModel('models/monkey_mid.js');
+      this.loadModel('models/monkey_high.js');
       this.onResize();
       window.addEventListener('resize', (function() {
         return _this.onResize();
