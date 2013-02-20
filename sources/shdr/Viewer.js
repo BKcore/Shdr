@@ -18,7 +18,7 @@
       this.scene.add(this.camera);
       this.loader = new THREE.JSONLoader();
       this.material = this.defaultMaterial();
-      this.loadModel('models/hexmkii.js');
+      this.loadModel('models/monkey_high.js');
       this.onResize();
       window.addEventListener('resize', (function() {
         return _this.onResize();

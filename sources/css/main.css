@@ -7,6 +7,12 @@ body {
     background: #1e1e1e;
 }
 
+#panel-main,#panel-left,#panel-right,#editor,#viewer
+{
+    overflow: hidden;
+    scroll: none;
+}
+
 #panel-main {
     margin: 0;
     position: absolute;
@@ -103,3 +109,30 @@ body {
     scroll: none;
 }
 
+#panel-top {
+    margin: 0;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.menu-list {
+    display: none;
+}
+
+.menu-item, .menu-trigger {
+    display: block;
+    height: 40px;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-trigger.open {
+    text-indent: -9999px;
+}
+
+#menu-update {
+    width: 160px;
+}

@@ -4,15 +4,14 @@
 
   App = (function() {
 
-    App.UPDATE_ALL = 1;
+    App.UPDATE_ALL = 0;
 
-    App.UPDATE_ENTER = 2;
+    App.UPDATE_ENTER = 1;
 
-    App.UPDATE_MANUAL = 3;
+    App.UPDATE_MANUAL = 2;
 
     function App(domEditor, domCanvas, conf) {
-      var eventType,
-        _this = this;
+      var _this = this;
       if (conf == null) {
         conf = {};
       }
@@ -20,6 +19,7 @@
         update: App.UPDATE_ALL
       };
       this.extend(this.conf, conf);
+      this.ui = new shdr.UI(this);
       this.editor = ace.edit(domEditor);
       this.editor.setFontSize("16px");
       this.editor.setTheme("ace/theme/monokai");
@@ -28,9 +28,11 @@
       this.editor.getSession().setUseWrapMode(true);
       this.viewer = new shdr.Viewer(this.byId(domCanvas));
       this.editor.getSession().setValue(this.viewer.fs);
-      eventType = this.conf.update === App.UPDATE_MANUAL ? 'keydown' : 'keyup';
-      this.byId(domEditor).addEventListener(eventType, (function(e) {
-        return _this.onEditorKey(e);
+      this.byId(domEditor).addEventListener('keyup', (function(e) {
+        return _this.onEditorKey(e, false);
+      }), false);
+      this.byId(domEditor).addEventListener('keydown', (function(e) {
+        return _this.onEditorKey(e, true);
       }), false);
       this.loop();
     }
@@ -47,8 +49,14 @@
       return this.viewer.update();
     };
 
-    App.prototype.onEditorKey = function(e) {
+    App.prototype.onEditorKey = function(e, override) {
       var bubble, update, _ref;
+      if (override && this.conf.update !== App.UPDATE_MANUAL) {
+        return;
+      }
+      if (!override && this.conf.update === App.UPDATE_MANUAL) {
+        return;
+      }
       _ref = this.needsUpdate(e.keyCode, e.ctrlKey, e.altKey), update = _ref[0], bubble = _ref[1];
       if (update) {
         this.viewer.updateShader(this.editor.getSession().getValue());
@@ -71,12 +79,22 @@
     App.prototype.needsUpdate = function(key, ctrl, alt) {
       switch (this.conf.update) {
         case App.UPDATE_ENTER:
+          console.log("update-E");
           return [key === 13, true];
         case App.UPDATE_MANUAL:
+          console.log("update-S");
           return [ctrl && key === 83, false];
         default:
+          console.log("update-A");
+          console.log(this.conf.update === App.UPDATE_ENTER);
+          console.log(this.conf.update, App.UPDATE_ENTER);
           return [true, true];
       }
+    };
+
+    App.prototype.setUpdateMode = function(mode) {
+      this.conf.update = parseInt(mode);
+      return console.log("setUpdateMode: " + mode + " / " + this.conf.update + " / " + App.UPDATE_ENTER);
     };
 
     App.prototype.byId = function(id) {

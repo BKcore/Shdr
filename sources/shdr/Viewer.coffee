@@ -10,7 +10,7 @@ class Viewer
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()
     @material = @defaultMaterial()
-    @loadModel('models/hexmkii.js')
+    @loadModel('models/monkey_high.js')
     @onResize()
     window.addEventListener('resize', (() => @onResize()), off)
 

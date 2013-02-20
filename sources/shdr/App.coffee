@@ -1,13 +1,14 @@
 class App
 
-  @UPDATE_ALL: 1
-  @UPDATE_ENTER: 2
-  @UPDATE_MANUAL: 3
+  @UPDATE_ALL: 0
+  @UPDATE_ENTER: 1
+  @UPDATE_MANUAL: 2
 
   constructor: (domEditor, domCanvas, conf={}) ->
     @conf =
       update: App.UPDATE_ALL
     @extend(@conf, conf)
+    @ui = new shdr.UI(@)
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
     @editor.setTheme("ace/theme/monokai")
@@ -16,8 +17,8 @@ class App
     @editor.getSession().setUseWrapMode(on)
     @viewer = new shdr.Viewer(@byId(domCanvas))
     @editor.getSession().setValue(@viewer.fs)
-    eventType = if @conf.update is App.UPDATE_MANUAL then 'keydown' else 'keyup'
-    @byId(domEditor).addEventListener(eventType, ((e) => @onEditorKey(e)), off)
+    @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKey(e, false)), off)
+    @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKey(e, true)), off)
     @loop()
 
   loop: ->
@@ -27,7 +28,9 @@ class App
   update: ->
     @viewer.update()
 
-  onEditorKey: (e) ->
+  onEditorKey: (e, override) ->
+    return if (override and @conf.update isnt App.UPDATE_MANUAL)
+    return if (not override and @conf.update is App.UPDATE_MANUAL)
     [update, bubble] = @needsUpdate(e.keyCode, e.ctrlKey, e.altKey)
     if update
       @viewer.updateShader(@editor.getSession().getValue())
@@ -43,11 +46,20 @@ class App
   needsUpdate: (key, ctrl, alt) ->
     switch @conf.update
       when App.UPDATE_ENTER
+        console.log "update-E"
         [key is 13, true] # Enter
       when App.UPDATE_MANUAL
+        console.log "update-S"
         [ctrl and key is 83, false] # CTRL + S
       else
+        console.log "update-A"
+        console.log (@conf.update is App.UPDATE_ENTER)
+        console.log @conf.update, App.UPDATE_ENTER
         [true, true]
+
+  setUpdateMode: (mode) ->
+    @conf.update = parseInt(mode)
+    console.log "setUpdateMode: #{mode} / #{@conf.update} / #{App.UPDATE_ENTER}"
 
   byId: (id) ->
     document.getElementById(id)
