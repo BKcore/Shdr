@@ -49,15 +49,27 @@
       return this.renderer.setSize(this.dom.clientWidth, this.dom.clientHeight);
     };
 
-    Viewer.prototype.loadModel = function(path) {
+    Viewer.prototype.loadModel = function(key) {
       var _this = this;
-      return this.loader.load(path, (function(g) {
-        return _this.addModel(g);
+      return this.loader.load(key, (function(geo) {
+        return _this.initModel(geo, key);
       }));
     };
 
-    Viewer.prototype.addModel = function(geo) {
+    Viewer.prototype.initModel = function(geo, key) {
+      var data, old;
+      data = shdr.Models[key];
+      if (this.model != null) {
+        old = this.model.geometry;
+        this.scene.remove(this.model);
+        old.dispose();
+      }
       this.model = new THREE.Mesh(geo, this.material);
+      if (data != null) {
+        if (data.scale != null) {
+          this.model.scale.set(data.scale, data.scale, data.scale);
+        }
+      }
       return this.scene.add(this.model);
     };
 
@@ -73,17 +85,13 @@
           type: 'f',
           value: 0.0
         },
-        camera: {
-          type: 'v3',
-          value: this.camera.position
-        },
         resolution: {
           type: 'v2',
           value: new THREE.Vector2(this.dom.clientWidth, this.dom.clientHeight)
         }
       };
-      this.vs = ['uniform vec3 camera;', 'varying vec3 fCamera;', 'varying vec3 fNormal;', 'varying vec3 fPosition;', 'varying vec3 fVPosition;', 'void main()', '{', 'fNormal = normalMatrix * normal;', 'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;', 'fVPosition = position;', 'fCamera = (modelMatrix * vec4(camera, 1.0)).xyz;', 'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);', '}'].join("\n");
-      this.fs = ['uniform float time;', 'varying vec3 fPosition;', 'varying vec3 fNormal;', 'varying vec3 fCamera;', 'void main()', '{', '  gl_FragColor = vec4(fNormal, 1.0);', '}'].join("\n");
+      this.vs = ['varying vec3 fNormal;', 'varying vec3 fPosition;', 'void main()', '{', 'fNormal = normalize(normalMatrix * normal);', 'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;', 'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);', '}'].join("\n");
+      this.fs = ['uniform float time;', 'uniform vec2 resolution;', 'varying vec3 fPosition;', 'varying vec3 fNormal;', 'void main()', '{', '  gl_FragColor = vec4(fNormal, 1.0);', '}'].join("\n");
       return new THREE.ShaderMaterial({
         uniforms: this.uniforms,
         vertexShader: this.vs,

@@ -13,6 +13,7 @@ class App
     @editor.setTheme("ace/theme/monokai")
     @editor.getSession().setTabSize(2)
     @editor.getSession().setMode("ace/mode/glsl")
+    @editor.getSession().setUseWrapMode(on)
     @viewer = new shdr.Viewer(@byId(domCanvas))
     @editor.getSession().setValue(@viewer.fs)
     eventType = if @conf.update is App.UPDATE_MANUAL then 'keydown' else 'keyup'

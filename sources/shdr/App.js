@@ -25,6 +25,7 @@
       this.editor.setTheme("ace/theme/monokai");
       this.editor.getSession().setTabSize(2);
       this.editor.getSession().setMode("ace/mode/glsl");
+      this.editor.getSession().setUseWrapMode(true);
       this.viewer = new shdr.Viewer(this.byId(domCanvas));
       this.editor.getSession().setValue(this.viewer.fs);
       eventType = this.conf.update === App.UPDATE_MANUAL ? 'keydown' : 'keyup';

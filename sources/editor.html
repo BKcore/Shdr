@@ -11,18 +11,23 @@
 </head>
 <body onload="init();">
 
-<div id="panel-left">
-	<div id="editor"></div>
+<div id="panel-main">
+  <div id="panel-left">
+  	<div id="editor"></div>
+  </div>
+  <div id="panel-right">
+    <div id="viewer"></div>
+  </div>
 </div>
-
-<div id="panel-right">
-	<div id="viewer"></div>
-</div>
+<div id="mid-separator"></div>
+<div id="top-separator"></div>
 	
 <script src="libs/three.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/three.orbit.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
+<script src="shdr/Snippets.js" type="text/javascript" charset="utf-8"></script>
+<script src="shdr/Models.js" type="text/javascript" charset="utf-8"></script>
 <script src="shdr/Viewer.js" type="text/javascript" charset="utf-8"></script>
 <script src="shdr/App.js" type="text/javascript" charset="utf-8"></script>
 

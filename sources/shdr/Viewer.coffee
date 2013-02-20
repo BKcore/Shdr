@@ -32,11 +32,20 @@ class Viewer
       @uniforms.resolution.value.y = @dom.clientHeight
     @renderer.setSize(@dom.clientWidth, @dom.clientHeight)
 
-  loadModel: (path) ->
-    @loader.load(path, ((g) => @addModel(g)))
+  loadModel: (key) ->
+    @loader.load(key, ((geo) => 
+      @initModel(geo, key)
+    ))
 
-  addModel: (geo) ->
+  initModel: (geo, key) ->
+    data = shdr.Models[key]
+    if @model?
+      old = @model.geometry
+      @scene.remove(@model)
+      old.dispose()
     @model = new THREE.Mesh(geo, @material)
+    if data?
+      @model.scale.set(data.scale, data.scale, data.scale) if data.scale?
     @scene.add(@model)
 
   updateShader: (fs) ->
@@ -46,30 +55,24 @@ class Viewer
 
   defaultMaterial: ->
     @uniforms = {
-      time: {type: 'f', value: 0.0},
-      camera: {type: 'v3', value: @camera.position}
+      time: {type: 'f', value: 0.0}
       resolution: {type: 'v2', value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)}
     }
     @vs = [
-      'uniform vec3 camera;'
-      'varying vec3 fCamera;'
       'varying vec3 fNormal;'
       'varying vec3 fPosition;'
-      'varying vec3 fVPosition;'
       'void main()'
       '{'
-      'fNormal = normalMatrix * normal;'
+      'fNormal = normalize(normalMatrix * normal);'
       'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;'
-      'fVPosition = position;'
-      'fCamera = (modelMatrix * vec4(camera, 1.0)).xyz;'
       'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);'
       '}'
     ].join("\n")
     @fs = [
       'uniform float time;'
+      'uniform vec2 resolution;'
       'varying vec3 fPosition;'
       'varying vec3 fNormal;'
-      'varying vec3 fCamera;'
       'void main()'
       '{'
       '  gl_FragColor = vec4(fNormal, 1.0);'
