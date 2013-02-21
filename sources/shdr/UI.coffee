@@ -3,6 +3,10 @@ class UI
   constructor: (@app) ->
     @initSnippets()
     @initMenus()
+    @initToggles()
+
+  initToggles: ->
+    $('.menu-toggle').on('click', (e) => @onToggle(e))
 
   initMenus: ->
     $('.menu-trigger').on('click.on', (e) => @onMenuTrigger(e))
@@ -13,6 +17,21 @@ class UI
     button = $('<button>').addClass('menu-item')
     for key of shdr.Snippets
       list.append(button.clone().text(key))
+
+  onToggle: (event) ->
+    el = $(event.target)
+    root = el.parent()
+    ico = el.children('i')
+    state = el.attr('data-current') is el.attr('data-off')
+    if state is on
+      el.attr('data-current', el.attr('data-on'))
+      ico.removeClass(ico.attr('data-off'))
+      ico.addClass(ico.attr('data-on'))
+    else
+      el.attr('data-current', el.attr('data-off'))
+      ico.removeClass(ico.attr('data-on'))
+      ico.addClass(ico.attr('data-off'))
+    @[root.attr('data-action')+'Action']?(state, null, el)
 
   onMenuTrigger: (event) ->
     el = $(event.target)
@@ -57,6 +76,9 @@ class UI
   snippetsAction: (index, item, trigger) ->
     code = shdr.Snippets[item.text()]
     @app.editor.insert(code) if code?
+
+  rotateAction: (state) ->
+    @app.viewer.rotate = state
 
 @shdr ||= {}
 @shdr.UI = UI

@@ -8,7 +8,15 @@
       this.app = app;
       this.initSnippets();
       this.initMenus();
+      this.initToggles();
     }
+
+    UI.prototype.initToggles = function() {
+      var _this = this;
+      return $('.menu-toggle').on('click', function(e) {
+        return _this.onToggle(e);
+      });
+    };
 
     UI.prototype.initMenus = function() {
       var _this = this;
@@ -29,6 +37,24 @@
         _results.push(list.append(button.clone().text(key)));
       }
       return _results;
+    };
+
+    UI.prototype.onToggle = function(event) {
+      var el, ico, root, state, _name;
+      el = $(event.target);
+      root = el.parent();
+      ico = el.children('i');
+      state = el.attr('data-current') === el.attr('data-off');
+      if (state === true) {
+        el.attr('data-current', el.attr('data-on'));
+        ico.removeClass(ico.attr('data-off'));
+        ico.addClass(ico.attr('data-on'));
+      } else {
+        el.attr('data-current', el.attr('data-off'));
+        ico.removeClass(ico.attr('data-on'));
+        ico.addClass(ico.attr('data-off'));
+      }
+      return typeof this[_name = root.attr('data-action') + 'Action'] === "function" ? this[_name](state, null, el) : void 0;
     };
 
     UI.prototype.onMenuTrigger = function(event) {
@@ -86,6 +112,10 @@
       if (code != null) {
         return this.app.editor.insert(code);
       }
+    };
+
+    UI.prototype.rotateAction = function(state) {
+      return this.app.viewer.rotate = state;
     };
 
     return UI;

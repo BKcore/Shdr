@@ -2,7 +2,9 @@ class Viewer
 
   constructor: (@dom) ->
     @time = 0.0
-    @renderer = new THREE.WebGLRenderer(antialias: true)
+    @rotate = true
+    @rotateRate = 0.005
+    @renderer = new THREE.WebGLRenderer(antialias: on)
     @dom.appendChild(@renderer.domElement)
     @scene = new THREE.Scene()
     @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 3000)
@@ -18,7 +20,7 @@ class Viewer
     @controls.update()
     @time += 0.001
     @uniforms.time.value = @time
-    @model.rotation.y = @time*5 if @model
+    @model.rotation.y += @rotateRate if @model and @rotate
     @renderer.render(@scene, @camera)
 
   onResize: ->

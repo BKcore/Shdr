@@ -129,14 +129,16 @@ body {
     display: none;
 }
 
-.menu-item, .menu-trigger, .menu-btn {
+.menu-item, .menu-trigger, .menu-button {
     cursor: pointer;
     display: block;
     height: 40px;
     line-height: 40px;
     width: 100%;
     text-align: left;
+    padding: 0;
     padding-left: 8px;
+    padding-right: 8px;
 
     border-top: 1px solid #111111;
     border-bottom: 1px solid #333333;
@@ -144,7 +146,7 @@ body {
     border-right: none;
     color: #ddd;
     font-family: Arial, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
 
     outline: none !important;
 
@@ -165,11 +167,16 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.menu-item:hover, .menu-trigger:hover, .menu-btn:hover,
-.menu-item:focus, .menu-trigger:focus, .menu-btn:focus,
-.menu-item:active, .menu-trigger:active, .menu-btn:active {
+.menu-item:hover, .menu-trigger:hover, .menu-button:hover,
+.menu-item:focus, .menu-trigger:focus, .menu-button:focus,
+.menu-item:active, .menu-trigger:active, .menu-button:active {
     color: #ffffff;
     background: #222222;
+}
+
+.menu-icon-only {
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .menu-right {
@@ -178,6 +185,7 @@ button::-moz-focus-inner {
 
 .menu-item i, .menu-trigger i, .menu-btn i {
     margin-right: 6px;
+    font-size: 14px;
 }
 
 .menu-trigger.open {

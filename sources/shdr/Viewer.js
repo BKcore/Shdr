@@ -8,6 +8,8 @@
       var _this = this;
       this.dom = dom;
       this.time = 0.0;
+      this.rotate = true;
+      this.rotateRate = 0.005;
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
@@ -29,8 +31,8 @@
       this.controls.update();
       this.time += 0.001;
       this.uniforms.time.value = this.time;
-      if (this.model) {
-        this.model.rotation.y = this.time * 5;
+      if (this.model && this.rotate) {
+        this.model.rotation.y += this.rotateRate;
       }
       return this.renderer.render(this.scene, this.camera);
     };
