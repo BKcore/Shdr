@@ -1,6 +1,8 @@
 Snippets = 
 
-	'Luma': 'vec3 luma = vec3(0.299, 0.587, 0.114);'
+	'Luma': [
+    'vec3 luma = vec3(0.299, 0.587, 0.114);'
+  ].join('\n')
 
   'Rimlight': [
     'vec3 rim(vec3 color, float start, float end, float coef)'
