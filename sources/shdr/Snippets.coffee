@@ -1,6 +1,6 @@
 Snippets = 
 
-	'rim': [
+	'Rimlight': [
     'vec3 rim(vec3 color, float start, float end, float coef)'
     '{'
     '  vec3 normal = normalize(fNormal);'
@@ -10,13 +10,14 @@ Snippets =
     '}'
   ].join('\n')
 
-  'split': [
+  'Split': [
     'vec3 split(vec3 left, vec3 right, float ratio, bool horizontal)'
     '{'
-    '  int i = int(horizontal);'
-    '  float m = i*gl_FragCoord.x/resolution.x + (1-i)*gl_FragCoord.y/resolution.y;'
-    '  int d = int(m < ratio);'
-    '  return left*d + right*(1-d);'
+    '  float i = float(horizontal);'
+    '  float m = i*gl_FragCoord.x/resolution.x;'
+    '  m += (1.0-i)*gl_FragCoord.y/resolution.y;'
+    '  float d = float(m < ratio);'
+    '  return left*d + right*(1.0-d);'
     '}'
   ].join('\n')
 

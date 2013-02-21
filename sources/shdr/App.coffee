@@ -46,20 +46,14 @@ class App
   needsUpdate: (key, ctrl, alt) ->
     switch @conf.update
       when App.UPDATE_ENTER
-        console.log "update-E"
         [key is 13, true] # Enter
       when App.UPDATE_MANUAL
-        console.log "update-S"
         [ctrl and key is 83, false] # CTRL + S
       else
-        console.log "update-A"
-        console.log (@conf.update is App.UPDATE_ENTER)
-        console.log @conf.update, App.UPDATE_ENTER
         [true, true]
 
   setUpdateMode: (mode) ->
     @conf.update = parseInt(mode)
-    console.log "setUpdateMode: #{mode} / #{@conf.update} / #{App.UPDATE_ENTER}"
 
   byId: (id) ->
     document.getElementById(id)

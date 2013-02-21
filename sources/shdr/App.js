@@ -79,22 +79,16 @@
     App.prototype.needsUpdate = function(key, ctrl, alt) {
       switch (this.conf.update) {
         case App.UPDATE_ENTER:
-          console.log("update-E");
           return [key === 13, true];
         case App.UPDATE_MANUAL:
-          console.log("update-S");
           return [ctrl && key === 83, false];
         default:
-          console.log("update-A");
-          console.log(this.conf.update === App.UPDATE_ENTER);
-          console.log(this.conf.update, App.UPDATE_ENTER);
           return [true, true];
       }
     };
 
     App.prototype.setUpdateMode = function(mode) {
-      this.conf.update = parseInt(mode);
-      return console.log("setUpdateMode: " + mode + " / " + this.conf.update + " / " + App.UPDATE_ENTER);
+      return this.conf.update = parseInt(mode);
     };
 
     App.prototype.byId = function(id) {

@@ -6,10 +6,11 @@
 
     function UI(app) {
       this.app = app;
-      this.initBehaviors();
+      this.initSnippets();
+      this.initMenus();
     }
 
-    UI.prototype.initBehaviors = function() {
+    UI.prototype.initMenus = function() {
       var _this = this;
       $('.menu-trigger').on('click.on', function(e) {
         return _this.onMenuTrigger(e);
@@ -19,14 +20,25 @@
       });
     };
 
+    UI.prototype.initSnippets = function() {
+      var button, key, list, _results;
+      list = $('#menu-snippets .menu-list');
+      button = $('<button>').addClass('menu-item');
+      _results = [];
+      for (key in shdr.Snippets) {
+        _results.push(list.append(button.clone().text(key)));
+      }
+      return _results;
+    };
+
     UI.prototype.onMenuTrigger = function(event) {
       var el, list, root,
         _this = this;
       el = $(event.target);
       root = el.parent();
-      list = root.find('.menu-list');
+      list = root.children('.menu-list');
       el.addClass('open');
-      list.fadeIn();
+      list.slideDown(200);
       $(document).on('click.menu-trigger', function() {
         return _this.offMenuTrigger(el, list);
       });
@@ -41,10 +53,11 @@
       var _this = this;
       el.removeClass('open');
       el.off('click.off');
+      el.blur();
       el.on('click.on', function(e) {
         return _this.onMenuTrigger(e);
       });
-      list.fadeOut();
+      list.slideUp(200);
       return $(document).off('click.menu-trigger');
     };
 
@@ -53,19 +66,26 @@
       item = $(event.target);
       list = item.parent();
       root = list.parent();
-      el = root.find('.menu-trigger');
+      el = root.children('.menu-trigger');
       index = item.attr('data-index');
-      el.text(item.text());
-      el.attr('data-index', index);
       if (typeof this[_name = root.attr('data-action') + 'Action'] === "function") {
-        this[_name](index);
+        this[_name](index, item, el);
       }
       this.offMenuTrigger(el, list);
       return event.stopPropagation();
     };
 
-    UI.prototype.updateAction = function(index) {
+    UI.prototype.updateAction = function(index, item, trigger) {
+      trigger.html(item.html());
       return this.app.setUpdateMode(index);
+    };
+
+    UI.prototype.snippetsAction = function(index, item, trigger) {
+      var code;
+      code = shdr.Snippets[item.text()];
+      if (code != null) {
+        return this.app.editor.insert(code);
+      }
     };
 
     return UI;

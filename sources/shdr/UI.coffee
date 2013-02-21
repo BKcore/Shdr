@@ -1,19 +1,26 @@
 class UI
 
   constructor: (@app) ->
-    @initBehaviors()
+    @initSnippets()
+    @initMenus()
 
-  initBehaviors: ->
+  initMenus: ->
     $('.menu-trigger').on('click.on', (e) => @onMenuTrigger(e))
     $('.menu-item').on('click', (e) => @onMenuItem(e))
+
+  initSnippets: ->
+    list = $('#menu-snippets .menu-list')
+    button = $('<button>').addClass('menu-item')
+    for key of shdr.Snippets
+      list.append(button.clone().text(key))
 
   onMenuTrigger: (event) ->
     el = $(event.target)
     root = el.parent()
-    list = root.find('.menu-list')
+    list = root.children('.menu-list')
     
     el.addClass('open')
-    list.fadeIn()
+    list.slideDown(200)
 
     $(document).on('click.menu-trigger', () => 
       @offMenuTrigger(el, list)
@@ -27,25 +34,29 @@ class UI
   offMenuTrigger: (el, list) ->
     el.removeClass('open')
     el.off('click.off')
+    el.blur()
     el.on('click.on', (e) => @onMenuTrigger(e))
-    list.fadeOut()
+    list.slideUp(200)
     $(document).off('click.menu-trigger')
 
   onMenuItem: (event) ->
     item = $(event.target)
     list = item.parent()
     root = list.parent()
-    el = root.find('.menu-trigger')
+    el = root.children('.menu-trigger')
     index = item.attr('data-index')
 
-    el.text(item.text())
-    el.attr('data-index', index)
-    @[root.attr('data-action')+'Action']?(index)
+    @[root.attr('data-action')+'Action']?(index, item, el)
     @offMenuTrigger(el, list)
     event.stopPropagation()
     
-  updateAction: (index) ->
-     @app.setUpdateMode(index)
+  updateAction: (index, item, trigger) ->
+    trigger.html(item.html())
+    @app.setUpdateMode(index)
+
+  snippetsAction: (index, item, trigger) ->
+    code = shdr.Snippets[item.text()]
+    @app.editor.insert(code) if code?
 
 @shdr ||= {}
 @shdr.UI = UI
