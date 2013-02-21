@@ -2,6 +2,7 @@ class UI
 
   constructor: (@app) ->
     @initSnippets()
+    @initModels()
     @initMenus()
     @initToggles()
 
@@ -18,6 +19,13 @@ class UI
     for key of shdr.Snippets
       list.append(button.clone().text(key))
 
+  initModels: ->
+    list = $('#menu-models .menu-list')
+    button = $('<button>').addClass('menu-item')
+    for key, model of shdr.Models
+      list.append(button.clone().text(model.name)
+      .attr('data-index', key))
+
   onToggle: (event) ->
     el = $(event.target)
     root = el.parent()
@@ -32,6 +40,7 @@ class UI
       ico.removeClass(ico.attr('data-on'))
       ico.addClass(ico.attr('data-off'))
     @[root.attr('data-action')+'Action']?(state, null, el)
+    @app.editor.focus()
 
   onMenuTrigger: (event) ->
     el = $(event.target)
@@ -57,6 +66,7 @@ class UI
     el.on('click.on', (e) => @onMenuTrigger(e))
     list.slideUp(200)
     $(document).off('click.menu-trigger')
+    @app.editor.focus()
 
   onMenuItem: (event) ->
     item = $(event.target)
@@ -76,6 +86,10 @@ class UI
   snippetsAction: (index, item, trigger) ->
     code = shdr.Snippets[item.text()]
     @app.editor.insert(code) if code?
+
+  modelsAction: (index, item, trigger) ->
+    trigger.children('span').text(item.text())
+    @app.viewer.loadModel(index)
 
   rotateAction: (state) ->
     @app.viewer.rotate = state

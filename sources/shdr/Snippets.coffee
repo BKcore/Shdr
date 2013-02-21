@@ -1,6 +1,8 @@
 Snippets = 
 
-	'Rimlight': [
+	'Luma': 'vec3 luma = vec3(0.299, 0.587, 0.114);'
+
+  'Rimlight': [
     'vec3 rim(vec3 color, float start, float end, float coef)'
     '{'
     '  vec3 normal = normalize(fNormal);'

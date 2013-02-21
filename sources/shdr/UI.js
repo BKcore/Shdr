@@ -7,6 +7,7 @@
     function UI(app) {
       this.app = app;
       this.initSnippets();
+      this.initModels();
       this.initMenus();
       this.initToggles();
     }
@@ -39,6 +40,19 @@
       return _results;
     };
 
+    UI.prototype.initModels = function() {
+      var button, key, list, model, _ref, _results;
+      list = $('#menu-models .menu-list');
+      button = $('<button>').addClass('menu-item');
+      _ref = shdr.Models;
+      _results = [];
+      for (key in _ref) {
+        model = _ref[key];
+        _results.push(list.append(button.clone().text(model.name).attr('data-index', key)));
+      }
+      return _results;
+    };
+
     UI.prototype.onToggle = function(event) {
       var el, ico, root, state, _name;
       el = $(event.target);
@@ -54,7 +68,10 @@
         ico.removeClass(ico.attr('data-on'));
         ico.addClass(ico.attr('data-off'));
       }
-      return typeof this[_name = root.attr('data-action') + 'Action'] === "function" ? this[_name](state, null, el) : void 0;
+      if (typeof this[_name = root.attr('data-action') + 'Action'] === "function") {
+        this[_name](state, null, el);
+      }
+      return this.app.editor.focus();
     };
 
     UI.prototype.onMenuTrigger = function(event) {
@@ -84,7 +101,8 @@
         return _this.onMenuTrigger(e);
       });
       list.slideUp(200);
-      return $(document).off('click.menu-trigger');
+      $(document).off('click.menu-trigger');
+      return this.app.editor.focus();
     };
 
     UI.prototype.onMenuItem = function(event) {
@@ -112,6 +130,11 @@
       if (code != null) {
         return this.app.editor.insert(code);
       }
+    };
+
+    UI.prototype.modelsAction = function(index, item, trigger) {
+      trigger.children('span').text(item.text());
+      return this.app.viewer.loadModel(index);
     };
 
     UI.prototype.rotateAction = function(state) {

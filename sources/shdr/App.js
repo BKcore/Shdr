@@ -34,6 +34,7 @@
       this.byId(domEditor).addEventListener('keydown', (function(e) {
         return _this.onEditorKey(e, true);
       }), false);
+      this.editor.focus();
       this.loop();
     }
 

@@ -19,6 +19,7 @@ class App
     @editor.getSession().setValue(@viewer.fs)
     @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKey(e, false)), off)
     @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKey(e, true)), off)
+    @editor.focus()
     @loop()
 
   loop: ->
