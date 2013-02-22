@@ -39,9 +39,9 @@ class Viewer
     @renderer.setSize(@dom.clientWidth, @dom.clientHeight)
 
   loadModel: (key) ->
-    @loader.load(key, ((geo) => 
+    @loader.load(key, (geo) => 
       @initModel(geo, key)
-    ))
+    )
 
   initModel: (geo, key) ->
     data = shdr.Models[key]
@@ -64,10 +64,13 @@ class Viewer
     @material.needsUpdate = true
 
   defaultMaterial: ->
-    @uniforms = {
-      time: {type: 'f', value: 0.0}
-      resolution: {type: 'v2', value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)}
-    }
+    @uniforms =
+      time: 
+        type: 'f'
+        value: 0.0
+      resolution:
+        type: 'v2'
+        value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
     return new THREE.ShaderMaterial(

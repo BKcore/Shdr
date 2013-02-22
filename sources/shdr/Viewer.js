@@ -58,9 +58,9 @@
 
     Viewer.prototype.loadModel = function(key) {
       var _this = this;
-      return this.loader.load(key, (function(geo) {
+      return this.loader.load(key, function(geo) {
         return _this.initModel(geo, key);
-      }));
+      });
     };
 
     Viewer.prototype.initModel = function(geo, key) {
