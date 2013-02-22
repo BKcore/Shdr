@@ -50,6 +50,11 @@ class App
     else
       type = shdr.Validator.VERTEX
     src = session.getValue()
+    if not src
+      @ui.setStatus('Shader cannot be empty',
+        shdr.UI.WARNING)
+      @marker = session.highlightLines(0, 0)
+      return
     [ok, line, msg] = @validator.validate(src, type)
     if ok
       @viewer.updateShader(src, @conf.mode)

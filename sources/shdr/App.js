@@ -77,6 +77,11 @@
         type = shdr.Validator.VERTEX;
       }
       src = session.getValue();
+      if (!src) {
+        this.ui.setStatus('Shader cannot be empty', shdr.UI.WARNING);
+        this.marker = session.highlightLines(0, 0);
+        return;
+      }
       _ref = this.validator.validate(src, type), ok = _ref[0], line = _ref[1], msg = _ref[2];
       if (ok) {
         this.viewer.updateShader(src, this.conf.mode);
