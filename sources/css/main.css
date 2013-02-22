@@ -1,165 +1,209 @@
 body {
-    overflow: hidden;
-    font-family: "Ubuntu sans", Arial, sans-serif;
-    font-size: 14px;
-    color: #ddd;
-    line-height: 1em;
-    background: #1e1e1e;
+  overflow: hidden;
+  font-family: "Ubuntu sans", Arial, sans-serif;
+  font-size: 14px;
+  color: #ddd;
+  line-height: 1em;
+  background: #1e1e1e;
 }
 
 #panel-main,#panel-left,#panel-right,#editor,#viewer
 {
-    overflow: hidden;
-    scroll: none;
-}
-
-#panel-main {
-    margin: 0;
-    position: absolute;
-    z-index: 2;
-    top: 42px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-#panel-left {
-    margin: 0;
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 50%;
-
-    background: #191919;
-}
-
-#panel-right {
-    margin: 0;
-    position: absolute;
-    z-index: 20;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 50%;
-
-    background: #191919;
-}
-
-#editor, #viewer { 
-    margin: 0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-}
-
-#top-separator {
-    margin: 0;
-    position: absolute;
-    top: 40px;
-    left: 0;
-    right: 0;
-    height: 0px;
-    z-index: 300;
-    border-top: 1px solid #111111;
-    border-bottom: 1px solid #333333;
-}
-
-#mid-separator {
-    margin: 0;
-    position: absolute;
-    left: 50%;
-    top: 42px;
-    bottom: 0;
-    right: 0;
-    width: 0px;
-    z-index: 301;
-    border-right: 1px solid #111111;
-    border-left: 1px solid #333333;
-}
-
-#console { 
-    margin: 0;
-    position: absolute;
-    bottom: 0;
-    top: 50%;
-    left: 0;
-    left: 3px;
-    width: 396px;
-    z-index: 220;
-    background: #1e1e1e;    
-    border-left: 1px solid #292929;
-}
-
-#console-text {
-    background: transparent;
-    border: none;
-    width: 100%;
-    height: 100%;
-    color: #666;
-    text-shadow: 0px 1px 1px #000000;
-    filter: dropshadow(color=#000000, offx=0, offy=1);
-    padding: 6px;
-    outline: none;
-    overflow: hidden;
-    scroll: none;
+  overflow: hidden;
+  scroll: none;
 }
 
 #panel-top {
-    margin: 0;
-    position: absolute;
-    z-index: 500;
-    top: 0;
-    left: 0;
-    right: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 500;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+#panel-bottom {
+  margin: 0;
+  position: absolute;
+  z-index: 400;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+}
+
+#panel-main {
+  margin: 0;
+  position: absolute;
+  z-index: 2;
+  top: 42px;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+}
+
+#panel-left {
+  margin: 0;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 50%;
+
+  background: #191919;
+}
+
+#panel-right {
+  margin: 0;
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 50%;
+
+  background: #191919;
+}
+
+#editor, #viewer { 
+  margin: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+#top-separator {
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  height: 0px;
+  z-index: 300;
+  border-top: 1px solid #111111;
+  border-bottom: 1px solid #333333;
+}
+
+#bottom-separator {
+  margin: 0;
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  height: 0px;
+  z-index: 302;
+  border-bottom: 1px solid #111111;
+  border-top: 1px solid #333333;
+}
+
+#mid-separator {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  bottom: 30px;
+  right: 0;
+  width: 0px;
+  z-index: 301;
+  border-right: 1px solid #111111;
+  border-left: 1px solid #333333;
+}
+
+#console { 
+  margin: 0;
+  position: absolute;
+  bottom: 0;
+  top: 50%;
+  left: 0;
+  left: 3px;
+  width: 396px;
+  z-index: 220;
+  background: #1e1e1e;    
+  border-left: 1px solid #292929;
+}
+
+#console-text {
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  color: #666;
+  text-shadow: 0px 1px 1px #000000;
+  filter: dropshadow(color=#000000, offx=0, offy=1);
+  padding: 6px;
+  outline: none;
+  overflow: hidden;
+  scroll: none;
+}
+
+#status {
+  line-height: 29px;
+  font-size: 14px;
+  font-family: "Ubuntu mono", monospace;
+  padding-left: 16px;
+}
+
+#status i {
+  margin-right: 8px;
+}
+
+.status-error {
+  color: #F92672;
+}
+
+.status-success {
+  color: #ACFF30;
+}
+
+.status-warning {
+  color: #FFD930;
 }
 
 .menu {
-    border: 1px solid #111111;
-    border-top: none;
-    border-left-color: #333;
-    float: left;
+  border: 1px solid #111111;
+  border-top: none;
+  border-left-color: #333;
+  float: left;
 }
 
 .menu-list {
-    display: none;
+  display: none;
 }
 
 .menu-item, .menu-trigger, .menu-button {
-    cursor: pointer;
-    display: block;
-    height: 40px;
-    line-height: 40px;
-    width: 100%;
-    text-align: left;
-    padding: 0;
-    padding-left: 8px;
-    padding-right: 8px;
+  cursor: pointer;
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  padding-left: 8px;
+  padding-right: 8px;
 
-    border-top: 1px solid #111111;
-    border-bottom: 1px solid #333333;
-    border-left: none;
-    border-right: none;
-    color: #ddd;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+  border-top: 1px solid #111111;
+  border-bottom: 1px solid #333333;
+  border-left: none;
+  border-right: none;
+  color: #ddd;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 
-    outline: none !important;
+  outline: none !important;
 
-    text-overflow: ellipsis;
+  text-overflow: ellipsis;
 
-    background: #333333;
-    background: -moz-linear-gradient(top,  #333333 0%, #222222 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#222222));
-    background: -webkit-linear-gradient(top,  #333333 0%,#222222 100%);
-    background: -o-linear-gradient(top,  #333333 0%,#222222 100%);
-    background: -ms-linear-gradient(top,  #333333 0%,#222222 100%);
-    background: linear-gradient(top bottom,  #333333 0%,#222222 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#222222',GradientType=0 );
+  background: #333333;
+  background: -moz-linear-gradient(top,  #333333 0%, #222222 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#222222));
+  background: -webkit-linear-gradient(top,  #333333 0%,#222222 100%);
+  background: -o-linear-gradient(top,  #333333 0%,#222222 100%);
+  background: -ms-linear-gradient(top,  #333333 0%,#222222 100%);
+  background: linear-gradient(top bottom,  #333333 0%,#222222 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#222222',GradientType=0 );
 
 }
 
@@ -170,54 +214,54 @@ button::-moz-focus-inner {
 .menu-item:hover, .menu-trigger:hover, .menu-button:hover,
 .menu-item:focus, .menu-trigger:focus, .menu-button:focus,
 .menu-item:active, .menu-trigger:active, .menu-button:active {
-    color: #ffffff;
-    background: #222222;
+  color: #ffffff;
+  background: #222222;
 }
 
 .menu-icon-only {
-    padding-left: 12px;
-    padding-right: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .menu-right {
-    float: right !important;
+  float: right !important;
 }
 
 .menu-item i, .menu-trigger i, .menu-btn i {
-    margin-right: 6px;
-    font-size: 14px;
+  margin-right: 6px;
+  font-size: 14px;
 }
 
 .menu-trigger.open {
-    padding-top: 4px;
-    font-size: 0px;
+  padding-top: 4px;
+  font-size: 0px;
 }
 .menu-trigger.open i {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 
 .ace_gutter {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border-right: 1px solid #222222;
-    border-left: 1px solid #333333;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-right: 1px solid #222222;
+  border-left: 1px solid #333333;
 }
 
-.ace_sb {
-    overflow-y: hidden !important;
+.ace_scrollbar {
+  display: none !important;
 }
 
 #editor {
-    background: #272822;
+  background: #272822;
   font-size: 16px;
   line-height: 18px;
 }
 
 .hl-error {
-    background: #ff0000 !important;
+  background: #ff0000 !important;
 }

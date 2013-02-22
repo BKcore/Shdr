@@ -4,13 +4,34 @@
 
   UI = (function() {
 
+    UI.ERROR = 0;
+
+    UI.SUCCESS = 1;
+
+    UI.WARNING = 2;
+
     function UI(app) {
       this.app = app;
+      this.initStatus();
       this.initSnippets();
       this.initModels();
       this.initMenus();
       this.initToggles();
     }
+
+    UI.prototype.initStatus = function() {
+      var content, el, icon, span;
+      el = $('#status');
+      span = el.children('span');
+      icon = span.children('i');
+      content = span.children('b');
+      return this.status = {
+        container: el,
+        span: span,
+        icon: icon,
+        content: content
+      };
+    };
 
     UI.prototype.initToggles = function() {
       var _this = this;
@@ -30,27 +51,47 @@
     };
 
     UI.prototype.initSnippets = function() {
-      var button, key, list, _results;
+      var button, key, list;
       list = $('#menu-snippets .menu-list');
       button = $('<button>').addClass('menu-item');
-      _results = [];
       for (key in shdr.Snippets) {
-        _results.push(list.append(button.clone().text(key)));
+        list.append(button.clone().text(key));
       }
-      return _results;
+      return false;
     };
 
     UI.prototype.initModels = function() {
-      var button, key, list, model, _ref, _results;
+      var button, key, list, model, _ref;
       list = $('#menu-models .menu-list');
       button = $('<button>').addClass('menu-item');
       _ref = shdr.Models;
-      _results = [];
       for (key in _ref) {
         model = _ref[key];
-        _results.push(list.append(button.clone().text(model.name).attr('data-index', key)));
+        list.append(button.clone().text(model.name).attr('data-index', key));
       }
-      return _results;
+      return false;
+    };
+
+    UI.prototype.setStatus = function(message, type) {
+      if (type == null) {
+        type = UI.ERROR;
+      }
+      this.status.span.removeClass();
+      this.status.icon.removeClass();
+      switch (type) {
+        case UI.ERROR:
+          this.status.span.addClass('status-error');
+          this.status.icon.addClass('icon-exclamation-sign');
+          break;
+        case UI.SUCCESS:
+          this.status.span.addClass('status-success');
+          this.status.icon.addClass('icon-ok-sign');
+          break;
+        case UI.WARNING:
+          this.status.span.addClass('status-warning');
+          this.status.icon.addClass('icon-warning-sign');
+      }
+      return this.status.content.text(message);
     };
 
     UI.prototype.onToggle = function(event) {

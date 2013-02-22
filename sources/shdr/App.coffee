@@ -32,15 +32,19 @@ class App
     @viewer.update()
 
   updateShader: ->
-    src = @editor.getSession().getValue()
+    session = @editor.getSession()
+    session.removeMarker(@marker.id) if @marker?
+    src = session.getValue()
     [ok, line, msg] = @validator.validate(src)
     if ok
       @viewer.updateShader(src)
+      @ui.setStatus('Shader successfully compiled',
+        shdr.UI.SUCCESS)
     else
-      console.log ok, line, msg
-      session = @editor.getSession()
-      session.removeMarker(@marker.id) if @marker?
-      @marker = session.highlightLines(line, line, 'hl-error', true)
+      line = Math.max(0, line-1)
+      @marker = session.highlightLines(line, line)
+      @ui.setStatus("Line #{line} : #{msg}",
+        shdr.UI.ERROR)
 
   onEditorKeyUp: (e) ->
     key = e.keyCode

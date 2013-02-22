@@ -54,17 +54,19 @@
 
     App.prototype.updateShader = function() {
       var line, msg, ok, session, src, _ref;
-      src = this.editor.getSession().getValue();
+      session = this.editor.getSession();
+      if (this.marker != null) {
+        session.removeMarker(this.marker.id);
+      }
+      src = session.getValue();
       _ref = this.validator.validate(src), ok = _ref[0], line = _ref[1], msg = _ref[2];
       if (ok) {
-        return this.viewer.updateShader(src);
+        this.viewer.updateShader(src);
+        return this.ui.setStatus('Shader successfully compiled', shdr.UI.SUCCESS);
       } else {
-        console.log(ok, line, msg);
-        session = this.editor.getSession();
-        if (this.marker != null) {
-          session.removeMarker(this.marker.id);
-        }
-        return this.marker = session.highlightLines(line, line, 'hl-error', true);
+        line = Math.max(0, line - 1);
+        this.marker = session.highlightLines(line, line);
+        return this.ui.setStatus("Line " + line + " : " + msg, shdr.UI.ERROR);
       }
     };
 
