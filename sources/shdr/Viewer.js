@@ -4,6 +4,10 @@
 
   Viewer = (function() {
 
+    Viewer.FRAGMENT = 0;
+
+    Viewer.VERTEX = 1;
+
     function Viewer(dom) {
       var _this = this;
       this.dom = dom;
@@ -76,9 +80,17 @@
       return this.scene.add(this.model);
     };
 
-    Viewer.prototype.updateShader = function(fs) {
-      this.fs = fs;
-      this.material.fragmentShader = fs;
+    Viewer.prototype.updateShader = function(shader, mode) {
+      if (mode == null) {
+        mode = Viewer.FRAGMENT;
+      }
+      if (mode === Viewer.FRAGMENT) {
+        this.fs = shader;
+        this.material.fragmentShader = shader;
+      } else {
+        this.vs = shader;
+        this.material.vertexShader = shader;
+      }
       return this.material.needsUpdate = true;
     };
 
@@ -93,8 +105,8 @@
           value: new THREE.Vector2(this.dom.clientWidth, this.dom.clientHeight)
         }
       };
-      this.vs = ['varying vec3 fNormal;', 'varying vec3 fPosition;', 'void main()', '{', 'fNormal = normalize(normalMatrix * normal);', 'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;', 'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);', '}'].join("\n");
-      this.fs = ['precision highp float;', 'uniform float time;', 'uniform vec2 resolution;', 'varying vec3 fPosition;', 'varying vec3 fNormal;', '', 'void main()', '{', '  gl_FragColor = vec4(fNormal, 1.0);', '}'].join("\n");
+      this.vs = shdr.Snippets.DefaultVertex;
+      this.fs = shdr.Snippets.DefaultFragment;
       return new THREE.ShaderMaterial({
         uniforms: this.uniforms,
         vertexShader: this.vs,

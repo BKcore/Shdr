@@ -3,26 +3,37 @@ class App
   @UPDATE_ALL: 0
   @UPDATE_ENTER: 1
   @UPDATE_MANUAL: 2
+  @FRAGMENT: 0
+  @VERTEX: 1
 
   constructor: (domEditor, domCanvas, conf={}) ->
+    # CUSTOM THREE.JS HACK
+    window.THREE_SHADER_OVERRIDE = true
+    @documents = ['', '']
     @marker = null
     @conf =
       update: App.UPDATE_ALL
+      mode: App.FRAGMENT
     @extend(@conf, conf)
     @ui = new shdr.UI(@)
+    @viewer = new shdr.Viewer(@byId(domCanvas))
+    @validator = new shdr.Validator(@viewer.canvas)
+    @initEditor(domEditor)
+    @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)
+    @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKeyDown(e)), off)
+    @loop()
+
+  initEditor: (domEditor) ->
+    @documents[App.FRAGMENT] = @viewer.fs
+    @documents[App.VERTEX] = @viewer.vs
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
     @editor.setTheme("ace/theme/monokai")
     @editor.getSession().setTabSize(2)
     @editor.getSession().setMode("ace/mode/glsl")
     @editor.getSession().setUseWrapMode(on)
-    @viewer = new shdr.Viewer(@byId(domCanvas))
-    @validator = new shdr.Validator(@viewer.canvas)
-    @editor.getSession().setValue(@viewer.fs)
+    @editor.getSession().setValue(@documents[@conf.mode])
     @editor.focus()
-    @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)
-    @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKeyDown(e)), off)
-    @loop()
 
   loop: ->
     requestAnimationFrame(() => @loop())
@@ -34,10 +45,14 @@ class App
   updateShader: ->
     session = @editor.getSession()
     session.removeMarker(@marker.id) if @marker?
+    if @conf.mode is App.FRAGMENT
+      type = shdr.Validator.FRAGMENT
+    else
+      type = shdr.Validator.VERTEX
     src = session.getValue()
-    [ok, line, msg] = @validator.validate(src)
+    [ok, line, msg] = @validator.validate(src, type)
     if ok
-      @viewer.updateShader(src)
+      @viewer.updateShader(src, @conf.mode)
       @ui.setStatus('Shader successfully compiled',
         shdr.UI.SUCCESS)
     else
@@ -67,6 +82,21 @@ class App
 
   setUpdateMode: (mode) ->
     @conf.update = parseInt(mode)
+    this
+
+  setMode: (mode=App.FRAGMENT) ->
+    return false if @conf.mode is mode
+    old = @conf.mode
+    @conf.mode = mode
+    session = @editor.getSession()
+    switch mode
+      when App.FRAGMENT
+        @documents[old] = session.getValue()
+        session.setValue(@documents[App.FRAGMENT])
+      when App.VERTEX
+        @documents[old] = session.getValue()
+        session.setValue(@documents[App.VERTEX])
+    this
 
   byId: (id) ->
     document.getElementById(id)
@@ -75,18 +105,6 @@ class App
     for key, val of properties
       object[key] = val
     object
-
-  debug: () ->
-    source = @editor.getSession().getValue()
-    gl = @viewer.renderer.getContext()
-    shader = gl.createShader(gl.FRAGMENT_SHADER)
-    gl.shaderSource(shader, source)
-    gl.compileShader(shader)
-    log = gl.getShaderInfoLog(shader)
-    @editor.getSession().setValue(log)
-    #
-    # marker = highlightLines(start, end, cssclass, front)
-    # editSession.removeMarker(marker.id)
 
 @shdr ||= {}
 @shdr.App = App

@@ -1,5 +1,8 @@
 class Viewer
 
+  @FRAGMENT: 0
+  @VERTEX: 1
+
   constructor: (@dom) ->
     @time = 0.0
     @rotate = true
@@ -51,9 +54,13 @@ class Viewer
       @model.scale.set(data.scale, data.scale, data.scale) if data.scale?
     @scene.add(@model)
 
-  updateShader: (fs) ->
-    @fs = fs
-    @material.fragmentShader = fs
+  updateShader: (shader, mode=Viewer.FRAGMENT) ->
+    if mode is Viewer.FRAGMENT
+      @fs = shader
+      @material.fragmentShader = shader
+    else
+      @vs = shader
+      @material.vertexShader = shader
     @material.needsUpdate = true
 
   defaultMaterial: ->
@@ -61,28 +68,8 @@ class Viewer
       time: {type: 'f', value: 0.0}
       resolution: {type: 'v2', value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)}
     }
-    @vs = [
-      'varying vec3 fNormal;'
-      'varying vec3 fPosition;'
-      'void main()'
-      '{'
-      'fNormal = normalize(normalMatrix * normal);'
-      'fPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;'
-      'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);'
-      '}'
-    ].join("\n")
-    @fs = [
-      'precision highp float;'
-      'uniform float time;'
-      'uniform vec2 resolution;'
-      'varying vec3 fPosition;'
-      'varying vec3 fNormal;'
-      ''
-      'void main()'
-      '{'
-      '  gl_FragColor = vec4(fNormal, 1.0);'
-      '}'
-    ].join("\n")
+    @vs = shdr.Snippets.DefaultVertex
+    @fs = shdr.Snippets.DefaultFragment
     return new THREE.ShaderMaterial(
       uniforms: @uniforms
       vertexShader: @vs

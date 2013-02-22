@@ -4,9 +4,9 @@
 
   Validator = (function() {
 
-    Validator.FRAGMENT = 0;
+    Validator.FRAGMENT = null;
 
-    Validator.VERTEX = 1;
+    Validator.VERTEX = null;
 
     function Validator(canvas) {
       this.canvas = canvas;

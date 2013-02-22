@@ -10,27 +10,27 @@
 
     App.UPDATE_MANUAL = 2;
 
+    App.FRAGMENT = 0;
+
+    App.VERTEX = 1;
+
     function App(domEditor, domCanvas, conf) {
       var _this = this;
       if (conf == null) {
         conf = {};
       }
+      window.THREE_SHADER_OVERRIDE = true;
+      this.documents = ['', ''];
       this.marker = null;
       this.conf = {
-        update: App.UPDATE_ALL
+        update: App.UPDATE_ALL,
+        mode: App.FRAGMENT
       };
       this.extend(this.conf, conf);
       this.ui = new shdr.UI(this);
-      this.editor = ace.edit(domEditor);
-      this.editor.setFontSize("16px");
-      this.editor.setTheme("ace/theme/monokai");
-      this.editor.getSession().setTabSize(2);
-      this.editor.getSession().setMode("ace/mode/glsl");
-      this.editor.getSession().setUseWrapMode(true);
       this.viewer = new shdr.Viewer(this.byId(domCanvas));
       this.validator = new shdr.Validator(this.viewer.canvas);
-      this.editor.getSession().setValue(this.viewer.fs);
-      this.editor.focus();
+      this.initEditor(domEditor);
       this.byId(domEditor).addEventListener('keyup', (function(e) {
         return _this.onEditorKeyUp(e);
       }), false);
@@ -39,6 +39,19 @@
       }), false);
       this.loop();
     }
+
+    App.prototype.initEditor = function(domEditor) {
+      this.documents[App.FRAGMENT] = this.viewer.fs;
+      this.documents[App.VERTEX] = this.viewer.vs;
+      this.editor = ace.edit(domEditor);
+      this.editor.setFontSize("16px");
+      this.editor.setTheme("ace/theme/monokai");
+      this.editor.getSession().setTabSize(2);
+      this.editor.getSession().setMode("ace/mode/glsl");
+      this.editor.getSession().setUseWrapMode(true);
+      this.editor.getSession().setValue(this.documents[this.conf.mode]);
+      return this.editor.focus();
+    };
 
     App.prototype.loop = function() {
       var _this = this;
@@ -53,15 +66,20 @@
     };
 
     App.prototype.updateShader = function() {
-      var line, msg, ok, session, src, _ref;
+      var line, msg, ok, session, src, type, _ref;
       session = this.editor.getSession();
       if (this.marker != null) {
         session.removeMarker(this.marker.id);
       }
+      if (this.conf.mode === App.FRAGMENT) {
+        type = shdr.Validator.FRAGMENT;
+      } else {
+        type = shdr.Validator.VERTEX;
+      }
       src = session.getValue();
-      _ref = this.validator.validate(src), ok = _ref[0], line = _ref[1], msg = _ref[2];
+      _ref = this.validator.validate(src, type), ok = _ref[0], line = _ref[1], msg = _ref[2];
       if (ok) {
-        this.viewer.updateShader(src);
+        this.viewer.updateShader(src, this.conf.mode);
         return this.ui.setStatus('Shader successfully compiled', shdr.UI.SUCCESS);
       } else {
         line = Math.max(0, line - 1);
@@ -102,7 +120,31 @@
     };
 
     App.prototype.setUpdateMode = function(mode) {
-      return this.conf.update = parseInt(mode);
+      this.conf.update = parseInt(mode);
+      return this;
+    };
+
+    App.prototype.setMode = function(mode) {
+      var old, session;
+      if (mode == null) {
+        mode = App.FRAGMENT;
+      }
+      if (this.conf.mode === mode) {
+        return false;
+      }
+      old = this.conf.mode;
+      this.conf.mode = mode;
+      session = this.editor.getSession();
+      switch (mode) {
+        case App.FRAGMENT:
+          this.documents[old] = session.getValue();
+          session.setValue(this.documents[App.FRAGMENT]);
+          break;
+        case App.VERTEX:
+          this.documents[old] = session.getValue();
+          session.setValue(this.documents[App.VERTEX]);
+      }
+      return this;
     };
 
     App.prototype.byId = function(id) {
@@ -116,17 +158,6 @@
         object[key] = val;
       }
       return object;
-    };
-
-    App.prototype.debug = function() {
-      var gl, log, shader, source;
-      source = this.editor.getSession().getValue();
-      gl = this.viewer.renderer.getContext();
-      shader = gl.createShader(gl.FRAGMENT_SHADER);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      log = gl.getShaderInfoLog(shader);
-      return this.editor.getSession().setValue(log);
     };
 
     return App;

@@ -1,7 +1,7 @@
 class Validator
 
-  @FRAGMENT: 0
-  @VERTEX: 1
+  @FRAGMENT: null
+  @VERTEX: null
 
   constructor: (@canvas) ->
     @available = true
