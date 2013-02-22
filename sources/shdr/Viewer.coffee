@@ -5,7 +5,8 @@ class Viewer
     @rotate = true
     @rotateRate = 0.005
     @renderer = new THREE.WebGLRenderer(antialias: on)
-    @dom.appendChild(@renderer.domElement)
+    @canvas = @renderer.domElement
+    @dom.appendChild(@canvas)
     @scene = new THREE.Scene()
     @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 3000)
     @controls = new THREE.OrbitControls(@camera, @dom)
@@ -71,6 +72,7 @@ class Viewer
       '}'
     ].join("\n")
     @fs = [
+      'precision highp float;'
       'uniform float time;'
       'uniform vec2 resolution;'
       'varying vec3 fPosition;'

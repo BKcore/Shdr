@@ -217,3 +217,7 @@ button::-moz-focus-inner {
   font-size: 16px;
   line-height: 18px;
 }
+
+.hl-error {
+    background: #ff0000 !important;
+}

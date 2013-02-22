@@ -5,6 +5,7 @@ class App
   @UPDATE_MANUAL: 2
 
   constructor: (domEditor, domCanvas, conf={}) ->
+    @marker = null
     @conf =
       update: App.UPDATE_ALL
     @extend(@conf, conf)
@@ -16,10 +17,11 @@ class App
     @editor.getSession().setMode("ace/mode/glsl")
     @editor.getSession().setUseWrapMode(on)
     @viewer = new shdr.Viewer(@byId(domCanvas))
+    @validator = new shdr.Validator(@viewer.canvas)
     @editor.getSession().setValue(@viewer.fs)
-    @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKey(e, false)), off)
-    @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKey(e, true)), off)
     @editor.focus()
+    @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)
+    @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKeyDown(e)), off)
     @loop()
 
   loop: ->
@@ -29,29 +31,35 @@ class App
   update: ->
     @viewer.update()
 
-  onEditorKey: (e, override) ->
-    return if (override and @conf.update isnt App.UPDATE_MANUAL)
-    return if (not override and @conf.update is App.UPDATE_MANUAL)
-    [update, bubble] = @needsUpdate(e.keyCode, e.ctrlKey, e.altKey)
-    if update
-      @viewer.updateShader(@editor.getSession().getValue())
-      if not bubble
-        e.cancelBubble = true
-        e.returnValue = false
-        e.stopPropagation?()
-        e.preventDefault?()
-      bubble
+  updateShader: ->
+    src = @editor.getSession().getValue()
+    [ok, line, msg] = @validator.validate(src)
+    if ok
+      @viewer.updateShader(src)
+    else
+      console.log ok, line, msg
+      session = @editor.getSession()
+      session.removeMarker(@marker.id) if @marker?
+      @marker = session.highlightLines(line, line, 'hl-error', true)
+
+  onEditorKeyUp: (e) ->
+    key = e.keyCode
+    proc = @conf.update is App.UPDATE_ENTER and key is 13
+    proc or= @conf.update is App.UPDATE_ALL
+    @updateShader() if proc
+    true
+
+  onEditorKeyDown: (e) ->
+    return true if @conf.update isnt App.UPDATE_MANUAL
+    if e.ctrlKey and e.keyCode is 83
+      @updateShader()
+      e.cancelBubble = true
+      e.returnValue = false
+      e.stopPropagation?()
+      e.preventDefault?()
+      false
     else
       true
-
-  needsUpdate: (key, ctrl, alt) ->
-    switch @conf.update
-      when App.UPDATE_ENTER
-        [key is 13, true] # Enter
-      when App.UPDATE_MANUAL
-        [ctrl and key is 83, false] # CTRL + S
-      else
-        [true, true]
 
   setUpdateMode: (mode) ->
     @conf.update = parseInt(mode)
@@ -63,6 +71,18 @@ class App
     for key, val of properties
       object[key] = val
     object
+
+  debug: () ->
+    source = @editor.getSession().getValue()
+    gl = @viewer.renderer.getContext()
+    shader = gl.createShader(gl.FRAGMENT_SHADER)
+    gl.shaderSource(shader, source)
+    gl.compileShader(shader)
+    log = gl.getShaderInfoLog(shader)
+    @editor.getSession().setValue(log)
+    #
+    # marker = highlightLines(start, end, cssclass, front)
+    # editSession.removeMarker(marker.id)
 
 @shdr ||= {}
 @shdr.App = App
