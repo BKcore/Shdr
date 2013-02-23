@@ -124,6 +124,10 @@ class UI
     trigger.children('span').text(item.text())
     @app.viewer.loadModel(index)
 
+  modeAction: (index, item, trigger) ->
+    trigger.children('span').text(item.text())
+    @app.setMode(index)
+
   rotateAction: (state) ->
     @app.viewer.rotate = state
 

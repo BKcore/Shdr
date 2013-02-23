@@ -207,6 +207,11 @@ body {
 
 }
 
+.menu-item {
+  line-height: 34px;
+  height: 34px;
+}
+
 button::-moz-focus-inner {
   border: 0;
 }

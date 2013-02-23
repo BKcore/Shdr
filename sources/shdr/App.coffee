@@ -90,6 +90,7 @@ class App
     this
 
   setMode: (mode=App.FRAGMENT) ->
+    mode = parseInt(mode)
     return false if @conf.mode is mode
     old = @conf.mode
     @conf.mode = mode

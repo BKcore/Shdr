@@ -178,6 +178,11 @@
       return this.app.viewer.loadModel(index);
     };
 
+    UI.prototype.modeAction = function(index, item, trigger) {
+      trigger.children('span').text(item.text());
+      return this.app.setMode(index);
+    };
+
     UI.prototype.rotateAction = function(state) {
       return this.app.viewer.rotate = state;
     };

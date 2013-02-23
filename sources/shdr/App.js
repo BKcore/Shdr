@@ -134,6 +134,7 @@
       if (mode == null) {
         mode = App.FRAGMENT;
       }
+      mode = parseInt(mode);
       if (this.conf.mode === mode) {
         return false;
       }

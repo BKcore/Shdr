@@ -12,6 +12,17 @@
 <body onload="init();">
 
 <div id="panel-top">
+  <div class="menu" id="menu-mode" data-action="mode">
+    <button class="menu-trigger"><i class="icon-pencil"></i><span>Fragment</span></button>
+    <div class="menu-list">
+      <button class="menu-item" data-index="0">Fragment</button>
+      <button class="menu-item" data-index="1">Vertex</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-snippets" data-action="snippets">
+    <button class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
+    <div class="menu-list"></div>
+  </div>
   <div class="menu" id="menu-update" data-action="update">
     <button class="menu-trigger"><i class="icon-circle"></i>Auto update</button>
     <div class="menu-list">
@@ -19,10 +30,6 @@
       <button class="menu-item" data-index="1"><i class="icon-adjust"></i>ENTER Update</button>
       <button class="menu-item" data-index="2"><i class="icon-circle-blank"></i>Ctrl+S Update</button>
     </div>
-  </div>
-  <div class="menu" id="menu-snippets" data-action="snippets">
-    <button class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
-    <div class="menu-list"></div>
   </div>
   <!-- LEFT/RIGHT -->
   <div class="menu menu-right" id="menu-models" data-action="models">
