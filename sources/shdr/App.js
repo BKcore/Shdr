@@ -20,6 +20,7 @@
         conf = {};
       }
       window.THREE_SHADER_OVERRIDE = true;
+      this.initBaseurl();
       this.documents = ['', ''];
       this.marker = null;
       this.conf = {
@@ -31,6 +32,7 @@
       this.viewer = new shdr.Viewer(this.byId(domCanvas));
       this.validator = new shdr.Validator(this.viewer.canvas);
       this.initEditor(domEditor);
+      this.initFromURL();
       this.byId(domEditor).addEventListener('keyup', (function(e) {
         return _this.onEditorKeyUp(e);
       }), false);
@@ -39,6 +41,17 @@
       }), false);
       this.loop();
     }
+
+    App.prototype.initBaseurl = function() {
+      var hash, url;
+      url = window.location.href;
+      hash = url.indexOf('#');
+      if (hash > 0) {
+        return this.baseurl = url.substr(0, hash);
+      } else {
+        return this.baseurl = url;
+      }
+    };
 
     App.prototype.initEditor = function(domEditor) {
       this.documents[App.FRAGMENT] = this.viewer.fs;
@@ -93,6 +106,98 @@
       }
     };
 
+    App.prototype.initFromURL = function() {
+      var fl, fm, fs, obj, vl, vm, vs, _fs, _ref, _ref1, _vs;
+      obj = this.unpackURL();
+      if (obj && obj.documents && obj.documents.length === 2) {
+        this.documents = obj.documents;
+        fs = this.documents[App.FRAGMENT];
+        vs = this.documents[App.VERTEX];
+        _ref = this.validator.validate(fs, shdr.Validator.FRAGMENT), _fs = _ref[0], fl = _ref[1], fm = _ref[2];
+        _ref1 = this.validator.validate(vs, shdr.Validator.VERTEX), _vs = _ref1[0], vl = _ref1[1], vm = _ref1[2];
+        if (_fs && _vs) {
+          this.viewer.updateShader(vs, App.VERTEX);
+          this.viewer.updateShader(fs, App.FRAGMENT);
+          this.editor.getSession().setValue(this.conf.mode === App.VERTEX ? vs : fs);
+          this.ui.setMenuMode(App.FRAGMENT);
+          this.ui.setStatus("Shaders successfully loaded and compiled from URL.", shdr.UI.SUCCESS);
+        } else if (_vs) {
+          this.viewer.updateShader(vs, App.VERTEX);
+          this.setMode(App.FRAGMENT, true);
+          this.ui.setMenuMode(App.FRAGMENT);
+          this.ui.setStatus("Shaders loaded from URL but Fragment could not compile. Line " + fl + " : " + fm, shdr.UI.WARNING);
+        } else if (_fs) {
+          this.viewer.updateShader(fs, App.FRAGMENT);
+          this.setMode(App.VERTEX, true);
+          this.ui.setMenuMode(App.VERTEX);
+          this.ui.setStatus("Shaders loaded from URL but Vertex could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
+        } else {
+          this.setMode(App.VERTEX, true);
+          this.ui.setMenuMode(App.VERTEX);
+          this.ui.setStatus("Shaders loaded from URL but could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
+        }
+        this.editor.focus();
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    App.prototype.packURL = function() {
+      var json, obj, packed;
+      try {
+        obj = {
+          documents: this.documents,
+          model: this.viewer.currentModel
+        };
+        json = JSON.stringify(obj);
+        packed = window.btoa(RawDeflate.deflate(json));
+        return this.baseurl + '#1/' + packed;
+      } catch (e) {
+        return this.ui.setStatus("Unable to pack document: " + (typeof e.getMessage === "function" ? e.getMessage() : void 0), shdr.UI.WARNING);
+      }
+    };
+
+    App.prototype.unpackURL = function() {
+      var hash, json, obj, packed, version;
+      if (!window.location.hash) {
+        return false;
+      }
+      try {
+        hash = window.location.hash.substr(1);
+        version = hash.substr(0, 2);
+        packed = hash.substr(2);
+        json = RawDeflate.inflate(window.atob(packed));
+        obj = JSON.parse(json);
+        return obj;
+      } catch (e) {
+        return this.ui.setStatus("Unable to unpack document: " + (typeof e.getMessage === "function" ? e.getMessage() : void 0), shdr.UI.WARNING);
+      }
+    };
+
+    App.prototype.download = function() {
+      var blob, url, win;
+      try {
+        blob = new Blob([this.editor.getSession().getValue()], {
+          type: 'text/plain'
+        });
+        url = URL.createObjectURL(blob);
+        win = window.open(url, '_blank');
+        if (win) {
+          win.focus();
+        } else {
+          this.ui.setStatus('Your browser as blocked the download, please disable popup blocker.', shdr.UI.WARNING);
+        }
+      } catch (e) {
+        this.ui.setStatus('Your browser does not support Blob, unable to download.', shdr.UI.WARNING);
+      }
+      return url;
+    };
+
+    App.prototype.updateDocument = function() {
+      return this.documents[this.conf.mode] = this.editor.getSession().getValue();
+    };
+
     App.prototype.onEditorKeyUp = function(e) {
       var key, proc;
       key = e.keyCode;
@@ -129,13 +234,16 @@
       return this;
     };
 
-    App.prototype.setMode = function(mode) {
+    App.prototype.setMode = function(mode, force) {
       var old, session;
       if (mode == null) {
         mode = App.FRAGMENT;
       }
+      if (force == null) {
+        force = false;
+      }
       mode = parseInt(mode);
-      if (this.conf.mode === mode) {
+      if (this.conf.mode === mode && !force) {
         return false;
       }
       old = this.conf.mode;
@@ -143,13 +251,18 @@
       session = this.editor.getSession();
       switch (mode) {
         case App.FRAGMENT:
-          this.documents[old] = session.getValue();
+          if (!force) {
+            this.documents[old] = session.getValue();
+          }
           session.setValue(this.documents[App.FRAGMENT]);
           break;
         case App.VERTEX:
-          this.documents[old] = session.getValue();
+          if (!force) {
+            this.documents[old] = session.getValue();
+          }
           session.setValue(this.documents[App.VERTEX]);
       }
+      this.updateShader();
       return this;
     };
 

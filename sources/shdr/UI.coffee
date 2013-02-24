@@ -10,6 +10,8 @@ class UI
     @initModels()
     @initMenus()
     @initToggles()
+    @initButtons()
+    @initBoxes()
 
   initStatus: ->
     el = $('#status')
@@ -21,6 +23,19 @@ class UI
       span: span
       icon: icon
       content: content
+
+  initBoxes: ->
+    @boxes =
+      share: $('#box-share')
+    @boxes.share.find('#box-share-url').on('click', (e) ->
+      $(this).select()
+    )
+    $('.box .close').on('click', (e) ->
+      $(this).parent().fadeOut(200)
+    )
+
+  initButtons: ->
+    $('.menu-button').on('click', (e) => @onButton(e))
 
   initToggles: ->
     $('.menu-toggle').on('click', (e) => @onToggle(e))
@@ -59,6 +74,14 @@ class UI
         @status.icon.addClass('icon-warning-sign')
     @status.content.text(message)
 
+  setMenuMode: (mode) ->
+    el = $('#menu-mode')
+    item = el.find("button[data-index=#{mode}]")
+    if item
+      el.find('.menu-trigger').children('span')
+      .text(item.text())
+    mode
+
   onToggle: (event) ->
     el = $(event.target)
     root = el.parent()
@@ -74,6 +97,12 @@ class UI
       ico.addClass(ico.attr('data-off'))
     @[root.attr('data-action')+'Action']?(state, null, el)
     @app.editor.focus()
+
+  onButton: (event) ->
+    el = $(event.target)
+    root = el.parent()
+    @[root.attr('data-action')+'Action']?(null, null, el)
+    el.blur()
 
   onMenuTrigger: (event) ->
     el = $(event.target)
@@ -130,6 +159,15 @@ class UI
 
   rotateAction: (state) ->
     @app.viewer.rotate = state
+
+  shareAction: ->
+    @app.updateDocument()
+    url = @app.packURL()
+    @boxes.share.find('#box-share-url').val(url)
+    @boxes.share.fadeIn(200)
+
+  downloadAction: ->
+    @app.download()
 
 @shdr ||= {}
 @shdr.UI = UI

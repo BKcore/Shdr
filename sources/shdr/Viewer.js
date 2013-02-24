@@ -13,6 +13,7 @@
       this.dom = dom;
       this.time = 0.0;
       this.rotate = true;
+      this.currentModel = null;
       this.rotateRate = 0.005;
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -65,6 +66,7 @@
 
     Viewer.prototype.initModel = function(geo, key) {
       var data, old;
+      this.currentModel = key;
       data = shdr.Models[key];
       if (this.model != null) {
         old = this.model.geometry;

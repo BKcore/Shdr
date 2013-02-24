@@ -6,6 +6,7 @@ class Viewer
   constructor: (@dom) ->
     @time = 0.0
     @rotate = true
+    @currentModel = null
     @rotateRate = 0.005
     @renderer = new THREE.WebGLRenderer(antialias: on)
     @canvas = @renderer.domElement
@@ -44,6 +45,7 @@ class Viewer
     )
 
   initModel: (geo, key) ->
+    @currentModel = key
     data = shdr.Models[key]
     if @model?
       old = @model.geometry

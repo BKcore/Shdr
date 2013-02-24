@@ -223,18 +223,22 @@ button::-moz-focus-inner {
   background: #222222;
 }
 
+.menu-right {
+  float: right !important;
+}
+
+.menu-item i, .menu-trigger i, .menu-button i {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
 .menu-icon-only {
   padding-left: 12px;
   padding-right: 12px;
 }
 
-.menu-right {
-  float: right !important;
-}
-
-.menu-item i, .menu-trigger i, .menu-btn i {
-  margin-right: 6px;
-  font-size: 14px;
+.menu-icon-only i {
+  margin-right: 0px;
 }
 
 .menu-trigger.open {
@@ -245,6 +249,65 @@ button::-moz-focus-inner {
   font-size: 14px;
 }
 
+.box {
+  position: absolute;
+  z-index: 1000;
+  background: #1c1c1c;
+  -webkit-box-shadow: 0px 0px 16px 0px #333;
+  box-shadow: 0px 0px 16px 0px #333;
+  border: 1px solid #090909;
+  display: none;
+}
+
+.box h1 {
+  margin: 0;
+  padding: 12px;
+  padding-top: 16px;
+  color: #040404;
+  text-shadow: 0px 1px 0px #333;
+  filter: dropshadow(color=#333, offx=0, offy=1);
+}
+
+.box .close {
+  color: #040404;
+  text-shadow: 0px 1px 0px #333;
+  filter: dropshadow(color=#333, offx=0, offy=1);
+  font-size: 16px;
+  padding: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  background: none;
+  border: none;
+}
+
+.box .close:hover {
+  color: #666;
+}
+
+#box-share {
+  z-index: 1001;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -200px;
+}
+
+#box-share-url {
+  margin: 12px;
+  margin-top: 0px;
+  background: #111;
+  border: none;
+  width: 356px;
+  line-height: 40px;
+  height: 40px;
+  color: #999;
+  padding: 0px 10px;
+  -webkit-box-shadow: inset 0px 4px 6px 0px #060606, 0px 1px 0px 0px #333333;
+  box-shadow: inset 0px 4px 6px 0px #060606, 0px 1px 0px 0px #333333; 
+}
 
 .ace_gutter {
   -webkit-touch-callout: none;

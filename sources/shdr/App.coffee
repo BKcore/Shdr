@@ -9,6 +9,7 @@ class App
   constructor: (domEditor, domCanvas, conf={}) ->
     # CUSTOM THREE.JS HACK
     window.THREE_SHADER_OVERRIDE = true
+    @initBaseurl()
     @documents = ['', '']
     @marker = null
     @conf =
@@ -19,9 +20,18 @@ class App
     @viewer = new shdr.Viewer(@byId(domCanvas))
     @validator = new shdr.Validator(@viewer.canvas)
     @initEditor(domEditor)
+    @initFromURL()
     @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)
     @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKeyDown(e)), off)
     @loop()
+
+  initBaseurl: ->
+    url = window.location.href
+    hash = url.indexOf('#')
+    if hash > 0
+      @baseurl = url.substr(0, hash)
+    else
+      @baseurl = url
 
   initEditor: (domEditor) ->
     @documents[App.FRAGMENT] = @viewer.fs
@@ -66,6 +76,88 @@ class App
       @ui.setStatus("Line #{line} : #{msg}",
         shdr.UI.ERROR)
 
+  initFromURL: ->
+    obj = @unpackURL()
+    if obj and obj.documents and obj.documents.length is 2
+      @documents = obj.documents
+      fs = @documents[App.FRAGMENT]
+      vs = @documents[App.VERTEX]
+      [_fs, fl, fm] = @validator.validate(fs, shdr.Validator.FRAGMENT)
+      [_vs, vl, vm] = @validator.validate(vs, shdr.Validator.VERTEX)
+      if _fs and _vs
+        @viewer.updateShader(vs, App.VERTEX)
+        @viewer.updateShader(fs, App.FRAGMENT)
+        @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)        
+        @ui.setMenuMode(App.FRAGMENT)
+        @ui.setStatus("Shaders successfully loaded and compiled from URL.",
+          shdr.UI.SUCCESS)
+      else if _vs
+        @viewer.updateShader(vs, App.VERTEX)
+        @setMode(App.FRAGMENT, true)
+        @ui.setMenuMode(App.FRAGMENT)
+        @ui.setStatus("Shaders loaded from URL but Fragment could not compile. Line #{fl} : #{fm}",
+          shdr.UI.WARNING)
+      else if _fs
+        @viewer.updateShader(fs, App.FRAGMENT)
+        @setMode(App.VERTEX, true)
+        @ui.setMenuMode(App.VERTEX)
+        @ui.setStatus("Shaders loaded from URL but Vertex could not compile. Line #{vl} : #{vm}",
+          shdr.UI.WARNING)
+      else
+        @setMode(App.VERTEX, true)
+        @ui.setMenuMode(App.VERTEX)
+        @ui.setStatus("Shaders loaded from URL but could not compile. Line #{vl} : #{vm}",
+          shdr.UI.WARNING)
+      @editor.focus()
+      true
+    else
+      false
+
+  packURL: ->
+    try
+      obj = 
+        documents: @documents
+        model: @viewer.currentModel
+      json = JSON.stringify(obj)
+      packed = window.btoa(RawDeflate.deflate(json))
+      return @baseurl + '#1/' + packed
+    catch e
+      @ui.setStatus("Unable to pack document: #{e.getMessage?()}",
+        shdr.UI.WARNING)
+
+  unpackURL: ->
+    return false if not window.location.hash
+    try
+      hash = window.location.hash.substr(1)
+      version = hash.substr(0, 2)
+      packed = hash.substr(2)
+      json = RawDeflate.inflate(window.atob(packed))
+      obj = JSON.parse(json)
+      return obj
+    catch e
+      @ui.setStatus("Unable to unpack document: #{e.getMessage?()}",
+        shdr.UI.WARNING)
+
+  download: ->
+    try
+      blob = new Blob([@editor.getSession().getValue()],
+        type: 'text/plain'
+      )
+      url = URL.createObjectURL(blob)
+      win = window.open(url, '_blank')
+      if win
+        win.focus()
+      else
+        @ui.setStatus('Your browser as blocked the download, please disable popup blocker.',
+        shdr.UI.WARNING)
+    catch e
+      @ui.setStatus('Your browser does not support Blob, unable to download.',
+        shdr.UI.WARNING)
+    url
+
+  updateDocument: ->
+    @documents[@conf.mode] = @editor.getSession().getValue()
+
   onEditorKeyUp: (e) ->
     key = e.keyCode
     proc = @conf.update is App.UPDATE_ENTER and key is 13
@@ -89,19 +181,20 @@ class App
     @conf.update = parseInt(mode)
     this
 
-  setMode: (mode=App.FRAGMENT) ->
+  setMode: (mode=App.FRAGMENT, force=false) ->
     mode = parseInt(mode)
-    return false if @conf.mode is mode
+    return false if @conf.mode is mode and not force
     old = @conf.mode
     @conf.mode = mode
     session = @editor.getSession()
     switch mode
       when App.FRAGMENT
-        @documents[old] = session.getValue()
+        @documents[old] = session.getValue() if not force
         session.setValue(@documents[App.FRAGMENT])
       when App.VERTEX
-        @documents[old] = session.getValue()
+        @documents[old] = session.getValue() if not force
         session.setValue(@documents[App.VERTEX])
+    @updateShader()
     this
 
   byId: (id) ->

@@ -17,6 +17,8 @@
       this.initModels();
       this.initMenus();
       this.initToggles();
+      this.initButtons();
+      this.initBoxes();
     }
 
     UI.prototype.initStatus = function() {
@@ -31,6 +33,25 @@
         icon: icon,
         content: content
       };
+    };
+
+    UI.prototype.initBoxes = function() {
+      this.boxes = {
+        share: $('#box-share')
+      };
+      this.boxes.share.find('#box-share-url').on('click', function(e) {
+        return $(this).select();
+      });
+      return $('.box .close').on('click', function(e) {
+        return $(this).parent().fadeOut(200);
+      });
+    };
+
+    UI.prototype.initButtons = function() {
+      var _this = this;
+      return $('.menu-button').on('click', function(e) {
+        return _this.onButton(e);
+      });
     };
 
     UI.prototype.initToggles = function() {
@@ -94,6 +115,16 @@
       return this.status.content.text(message);
     };
 
+    UI.prototype.setMenuMode = function(mode) {
+      var el, item;
+      el = $('#menu-mode');
+      item = el.find("button[data-index=" + mode + "]");
+      if (item) {
+        el.find('.menu-trigger').children('span').text(item.text());
+      }
+      return mode;
+    };
+
     UI.prototype.onToggle = function(event) {
       var el, ico, root, state, _name;
       el = $(event.target);
@@ -113,6 +144,16 @@
         this[_name](state, null, el);
       }
       return this.app.editor.focus();
+    };
+
+    UI.prototype.onButton = function(event) {
+      var el, root, _name;
+      el = $(event.target);
+      root = el.parent();
+      if (typeof this[_name = root.attr('data-action') + 'Action'] === "function") {
+        this[_name](null, null, el);
+      }
+      return el.blur();
     };
 
     UI.prototype.onMenuTrigger = function(event) {
@@ -185,6 +226,18 @@
 
     UI.prototype.rotateAction = function(state) {
       return this.app.viewer.rotate = state;
+    };
+
+    UI.prototype.shareAction = function() {
+      var url;
+      this.app.updateDocument();
+      url = this.app.packURL();
+      this.boxes.share.find('#box-share-url').val(url);
+      return this.boxes.share.fadeIn(200);
+    };
+
+    UI.prototype.downloadAction = function() {
+      return this.app.download();
     };
 
     return UI;

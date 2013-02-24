@@ -19,10 +19,6 @@
       <button class="menu-item" data-index="1">Vertex</button>
     </div>
   </div>
-  <div class="menu" id="menu-snippets" data-action="snippets">
-    <button class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
-    <div class="menu-list"></div>
-  </div>
   <div class="menu" id="menu-update" data-action="update">
     <button class="menu-trigger"><i class="icon-circle"></i>Auto update</button>
     <div class="menu-list">
@@ -30,6 +26,16 @@
       <button class="menu-item" data-index="1"><i class="icon-adjust"></i>ENTER Update</button>
       <button class="menu-item" data-index="2"><i class="icon-circle-blank"></i>Ctrl+S Update</button>
     </div>
+  </div>
+  <div class="menu" id="menu-snippets" data-action="snippets">
+    <button class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
+    <div class="menu-list"></div>
+  </div>
+  <div class="menu" id="menu-download" data-action="download">
+    <button class="menu-button"><i class="icon-download-alt"></i>Download</button>
+  </div>
+  <div class="menu" id="menu-share" data-action="share">
+    <button class="menu-button"><i class="icon-share-alt"></i>Share</button>
   </div>
   <!-- LEFT/RIGHT -->
   <div class="menu menu-right" id="menu-models" data-action="models">
@@ -56,6 +62,16 @@
   <div id="status">
     <span class="status-success"><i class="icon-ok-sign"></i><b>Ready</b></span>
   </div>
+</div>
+
+<div id="box-share" class="box">
+  <h1 class="title">Share URL</h1>
+  <div class="content">
+    <input type="text" value="" id="box-share-url"></input>
+  </div>
+  <button class="close">
+    <i class="icon-remove"></i>
+  </button>
 </div>
 
 <div id="mid-separator"></div>
