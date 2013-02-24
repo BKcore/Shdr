@@ -21,6 +21,10 @@
       this.initBoxes();
     }
 
+    UI.prototype.hideMainLoader = function() {
+      return $('#main-loader').fadeOut(400);
+    };
+
     UI.prototype.initStatus = function() {
       var content, el, icon, span;
       el = $('#status');

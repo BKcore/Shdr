@@ -13,6 +13,9 @@ class UI
     @initButtons()
     @initBoxes()
 
+  hideMainLoader: ->
+    $('#main-loader').fadeOut(400)
+
   initStatus: ->
     el = $('#status')
     span = el.children('span')

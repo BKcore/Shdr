@@ -12,17 +12,19 @@ class App
     @initBaseurl()
     @documents = ['', '']
     @marker = null
+    @viewer = null
+    @validator = null
     @conf =
       update: App.UPDATE_ALL
       mode: App.FRAGMENT
     @extend(@conf, conf)
     @ui = new shdr.UI(@)
-    @viewer = new shdr.Viewer(@byId(domCanvas))
-    @validator = new shdr.Validator(@viewer.canvas)
+    return if not @initViewer(domCanvas)
     @initEditor(domEditor)
     @initFromURL()
     @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)
     @byId(domEditor).addEventListener('keydown', ((e) => @onEditorKeyDown(e)), off)
+    @ui.hideMainLoader()
     @loop()
 
   initBaseurl: ->
@@ -33,12 +35,26 @@ class App
     else
       @baseurl = url
 
+  initViewer: (domCanvas) ->
+    try
+      @viewer = new shdr.Viewer(@byId(domCanvas))
+      @validator = new shdr.Validator(@viewer.canvas)
+    catch e
+      msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?"
+      @ui.setStatus(msg,
+        shdr.UI.WARNING)
+      conf = confirm(msg)
+      location.href = "http://get.webgl.org/" if conf
+      return false
+    return true
+
   initEditor: (domEditor) ->
     @documents[App.FRAGMENT] = @viewer.fs
     @documents[App.VERTEX] = @viewer.vs
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
-    @editor.setTheme("ace/theme/monokai")
+    @editor.setShowPrintMargin(off)
+    #@editor.setTheme("ace/theme/monokai")
     @editor.getSession().setTabSize(2)
     @editor.getSession().setMode("ace/mode/glsl")
     @editor.getSession().setUseWrapMode(on)

@@ -23,14 +23,17 @@
       this.initBaseurl();
       this.documents = ['', ''];
       this.marker = null;
+      this.viewer = null;
+      this.validator = null;
       this.conf = {
         update: App.UPDATE_ALL,
         mode: App.FRAGMENT
       };
       this.extend(this.conf, conf);
       this.ui = new shdr.UI(this);
-      this.viewer = new shdr.Viewer(this.byId(domCanvas));
-      this.validator = new shdr.Validator(this.viewer.canvas);
+      if (!this.initViewer(domCanvas)) {
+        return;
+      }
       this.initEditor(domEditor);
       this.initFromURL();
       this.byId(domEditor).addEventListener('keyup', (function(e) {
@@ -39,6 +42,7 @@
       this.byId(domEditor).addEventListener('keydown', (function(e) {
         return _this.onEditorKeyDown(e);
       }), false);
+      this.ui.hideMainLoader();
       this.loop();
     }
 
@@ -53,12 +57,29 @@
       }
     };
 
+    App.prototype.initViewer = function(domCanvas) {
+      var conf, msg;
+      try {
+        this.viewer = new shdr.Viewer(this.byId(domCanvas));
+        this.validator = new shdr.Validator(this.viewer.canvas);
+      } catch (e) {
+        msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?";
+        this.ui.setStatus(msg, shdr.UI.WARNING);
+        conf = confirm(msg);
+        if (conf) {
+          location.href = "http://get.webgl.org/";
+        }
+        return false;
+      }
+      return true;
+    };
+
     App.prototype.initEditor = function(domEditor) {
       this.documents[App.FRAGMENT] = this.viewer.fs;
       this.documents[App.VERTEX] = this.viewer.vs;
       this.editor = ace.edit(domEditor);
       this.editor.setFontSize("16px");
-      this.editor.setTheme("ace/theme/monokai");
+      this.editor.setShowPrintMargin(false);
       this.editor.getSession().setTabSize(2);
       this.editor.getSession().setMode("ace/mode/glsl");
       this.editor.getSession().setUseWrapMode(true);
