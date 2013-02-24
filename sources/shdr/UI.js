@@ -37,7 +37,8 @@
 
     UI.prototype.initBoxes = function() {
       this.boxes = {
-        share: $('#box-share')
+        share: $('#box-share'),
+        about: $('#box-about')
       };
       this.boxes.share.find('#box-share-url').on('click', function(e) {
         return $(this).select();
@@ -238,6 +239,10 @@
 
     UI.prototype.downloadAction = function() {
       return this.app.download();
+    };
+
+    UI.prototype.aboutAction = function() {
+      return this.boxes.about.fadeIn(200);
     };
 
     return UI;

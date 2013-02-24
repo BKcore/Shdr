@@ -13,6 +13,17 @@ body {
   scroll: none;
 }
 
+#shdr {
+  font-size: 40px;
+  font-weight: bold;
+  font-family: "Ubuntu mono", monospace;
+  color: #262626;
+  position: absolute;
+  z-index: 800;
+  top: 10px;
+  left: 5px;
+}
+
 #panel-top {
   margin: 0;
   position: absolute;
@@ -65,7 +76,7 @@ body {
   background: #191919;
 }
 
-#editor, #viewer { 
+#editor, #viewer, #footer { 
   margin: 0;
   position: absolute;
   top: 0;
@@ -207,6 +218,13 @@ body {
 
 }
 
+.menu-status button {
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+  height: 30px;
+  line-height: 30px;
+}
+
 .menu-item {
   line-height: 34px;
   height: 34px;
@@ -286,6 +304,16 @@ button::-moz-focus-inner {
   color: #666;
 }
 
+.box .content {
+  margin: 12px;
+  margin-top: 0px;
+  line-height: 1.2em;
+}
+
+.box a {
+  color: #F92672;
+}
+
 #box-share {
   z-index: 1001;
   width: 400px;
@@ -295,9 +323,16 @@ button::-moz-focus-inner {
   margin-left: -200px;
 }
 
+#box-about {
+  z-index: 1002;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  margin-top: -140px;
+  margin-left: -200px;
+}
+
 #box-share-url {
-  margin: 12px;
-  margin-top: 0px;
   background: #111;
   border: none;
   width: 356px;

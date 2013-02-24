@@ -36,10 +36,14 @@
       if (!this.available || !source) {
         return [true, null, null];
       }
-      shader = this.context.createShader(type);
-      this.context.shaderSource(shader, source);
-      this.context.compileShader(shader);
-      status = this.context.getShaderParameter(shader, this.context.COMPILE_STATUS);
+      try {
+        shader = this.context.createShader(type);
+        this.context.shaderSource(shader, source);
+        this.context.compileShader(shader);
+        status = this.context.getShaderParameter(shader, this.context.COMPILE_STATUS);
+      } catch (e) {
+        return [false, 0, e.getMessage];
+      }
       if (status === true) {
         return [true, null, null];
       } else {

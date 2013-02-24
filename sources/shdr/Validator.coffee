@@ -21,11 +21,14 @@ class Validator
 
   validate: (source, type=Validator.FRAGMENT) ->
     return [true, null, null] if not @available or not source
-    shader = @context.createShader(type)
-    @context.shaderSource(shader, source)
-    @context.compileShader(shader)
-    status = @context.getShaderParameter(
-      shader, @context.COMPILE_STATUS)
+    try
+      shader = @context.createShader(type)
+      @context.shaderSource(shader, source)
+      @context.compileShader(shader)
+      status = @context.getShaderParameter(
+        shader, @context.COMPILE_STATUS)
+    catch e
+      return [false, 0, e.getMessage]
     if status is true
       return [true, null, null]
     else

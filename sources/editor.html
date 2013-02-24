@@ -7,7 +7,6 @@
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
-  </style>
 </head>
 <body onload="init();">
 
@@ -55,6 +54,7 @@
   </div>
   <div id="panel-right">
     <div id="viewer"></div>
+    <div id="shdr">Shdr</div>
   </div>
 </div>
 
@@ -62,12 +62,42 @@
   <div id="status">
     <span class="status-success"><i class="icon-ok-sign"></i><b>Ready</b></span>
   </div>
+  <div id="footer">
+    <div class="menu menu-right menu-status" id="menu-download" data-action="about">
+      <button class="menu-button"><i class="icon-info-sign"></i>About Shdr</button>
+    </div>
+  </div>
 </div>
 
 <div id="box-share" class="box">
   <h1 class="title">Share URL</h1>
   <div class="content">
-    <input type="text" value="" id="box-share-url"></input>
+    <input type="text" value="" id="box-share-url">
+  </div>
+  <button class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="box-about" class="box">
+  <h1 class="title">About Shdr</h1>
+  <div class="content">
+    <p>
+      Shdr is an online ESSL (GLSL) shader editor, viewer and validator powered by WebGL.
+    </p>
+    <p>
+      <b>Author:</b> <a href="bkcore.com" target="_blank">Thibaut Despoulain</a>
+      <br><b>Version:</b> 0.1.130224
+    </p>
+    <p>
+      Inspired by MrDoob's live HTML editor.
+      <br>Powered by Three.js, Ace.js, RawDeflate.js and jQuery.
+      <br>Icons by AwesomeFont, Monkey head from Blender, HexMKII from HexGL.
+    </p>
+    <p>
+      Issues, feature requests, contributions:
+      <a href="https://github.com/BKcore/Shdr" target="_blan">Fork me on GitHub!</a>
+    </p>
   </div>
   <button class="close">
     <i class="icon-remove"></i>

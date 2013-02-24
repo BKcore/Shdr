@@ -27,6 +27,7 @@ class UI
   initBoxes: ->
     @boxes =
       share: $('#box-share')
+      about: $('#box-about')
     @boxes.share.find('#box-share-url').on('click', (e) ->
       $(this).select()
     )
@@ -168,6 +169,9 @@ class UI
 
   downloadAction: ->
     @app.download()
+
+  aboutAction: ->
+    @boxes.about.fadeIn(200)
 
 @shdr ||= {}
 @shdr.UI = UI

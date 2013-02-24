@@ -36,6 +36,28 @@ Snippets =
     'vec3 luma = vec3(0.299, 0.587, 0.114);'
   ].join('\n')
 
+  'Blin-Phong (Dir)': [
+    'vec2 blinnPhongDir(vec3 lightDir, float lightInt, float Ka, float Kd, float Ks, float shininess)'
+    '{'
+    '  vec3 s = normalize(lightDir);'
+    '  vec3 v = normalize(-fPosition);'
+    '  vec3 n = normalize(fNormal);' 
+    '  vec3 h = normalize(v+s);'
+    '  float diffuse = Ka + Kd * lightInt * max(0.0, dot(n, v));'
+    '  float spec =  Ks * pow(max(0.0, dot(n,h)), shininess);'
+    '  return vec2(diffuse, spec);'
+    '}'
+  ].join('\n')
+
+  'ColorNormal': [
+    'vec3 colorNormal(vec3 col1, vec3 col2, vec3 col3)'
+    '{'
+    '  vec3 n = normalize(fNormal);'
+    '  return clamp(col1*n.x + col2*n.y + col3*n.z,'
+    '              vec3(0.0), vec3(1.0));'
+    '}'
+  ].join('\n')
+
   'Rimlight': [
     'vec3 rim(vec3 color, float start, float end, float coef)'
     '{'
