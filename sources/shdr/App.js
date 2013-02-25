@@ -63,6 +63,7 @@
         this.viewer = new shdr.Viewer(this.byId(domCanvas), this);
         this.validator = new shdr.Validator(this.viewer.canvas);
       } catch (e) {
+        console.warn(e);
         msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?";
         this.ui.setStatus(msg, shdr.UI.WARNING);
         this.ui.displayWebGLError();

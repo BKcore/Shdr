@@ -17,7 +17,7 @@ class Viewer
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()
     @material = @defaultMaterial()
-    @loadModel('models/monkey_high.js')
+    @loadModel('models/suzanne_high.js')
     @onResize()
     window.addEventListener('resize', (() => @onResize()), off)
 

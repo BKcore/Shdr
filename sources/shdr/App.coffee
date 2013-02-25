@@ -40,6 +40,7 @@ class App
       @viewer = new shdr.Viewer(@byId(domCanvas), @)
       @validator = new shdr.Validator(@viewer.canvas)
     catch e
+      console.warn e
       msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?"
       @ui.setStatus(msg,
         shdr.UI.WARNING)

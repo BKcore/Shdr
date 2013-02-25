@@ -27,7 +27,7 @@
       this.scene.add(this.camera);
       this.loader = new THREE.JSONLoader();
       this.material = this.defaultMaterial();
-      this.loadModel('models/monkey_high.js');
+      this.loadModel('models/suzanne_high.js');
       this.onResize();
       window.addEventListener('resize', (function() {
         return _this.onResize();

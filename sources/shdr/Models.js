@@ -3,18 +3,28 @@
   var Models;
 
   Models = {
+    'models/cube.js': {
+      name: 'Cube'
+    },
+    'models/sphere.js': {
+      name: 'Shere'
+    },
+    'models/torus.js': {
+      name: 'Torus'
+    },
+    'models/dragon.js': {
+      name: 'Dragon',
+      scale: 1.2
+    },
     'models/hexmkii.js': {
       name: 'Hex MKII',
       scale: 0.01
     },
-    'models/monkey_low.js': {
-      name: 'Monkeyhead (low)'
+    'models/suzanne_low.js': {
+      name: 'Suzanne (low)'
     },
-    'models/monkey_mid.js': {
-      name: 'Monkeyhead (mid)'
-    },
-    'models/monkey_high.js': {
-      name: 'Monkeyhead (high)'
+    'models/suzanne_high.js': {
+      name: 'Suzanne (high)'
     }
   };
 
