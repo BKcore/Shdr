@@ -22,6 +22,9 @@ class UI
   hideModelLoader: ->
     $('#model-loader').fadeOut(400)
 
+  displayWebGLError: ->
+    $('#main-loader div').text('WebGL support missing.')
+
   initStatus: ->
     el = $('#status')
     span = el.children('span')

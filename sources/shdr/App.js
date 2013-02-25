@@ -65,6 +65,7 @@
       } catch (e) {
         msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?";
         this.ui.setStatus(msg, shdr.UI.WARNING);
+        this.ui.displayWebGLError();
         conf = confirm(msg);
         if (conf) {
           location.href = "http://get.webgl.org/";

@@ -33,6 +33,10 @@
       return $('#model-loader').fadeOut(400);
     };
 
+    UI.prototype.displayWebGLError = function() {
+      return $('#main-loader div').text('WebGL support missing.');
+    };
+
     UI.prototype.initStatus = function() {
       var content, el, icon, span;
       el = $('#status');

@@ -43,6 +43,7 @@ class App
       msg = "Unable to start Shdr. \n\nWebGL is either deactivated or not supported by your device or browser. \n\nWould you like to visit get.webgl.org for more info?"
       @ui.setStatus(msg,
         shdr.UI.WARNING)
+      @ui.displayWebGLError()
       conf = confirm(msg)
       location.href = "http://get.webgl.org/" if conf
       return false
