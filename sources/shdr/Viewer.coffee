@@ -3,7 +3,7 @@ class Viewer
   @FRAGMENT: 0
   @VERTEX: 1
 
-  constructor: (@dom) ->
+  constructor: (@dom, @app) ->
     @time = 0.0
     @rotate = true
     @currentModel = null
@@ -43,6 +43,7 @@ class Viewer
     @loader.load(key, (geo) => 
       @initModel(geo, key)
     )
+    @app.ui.showModelLoader()
 
   initModel: (geo, key) ->
     @currentModel = key
@@ -55,6 +56,7 @@ class Viewer
     if data?
       @model.scale.set(data.scale, data.scale, data.scale) if data.scale?
     @scene.add(@model)
+    @app.ui.hideModelLoader()
 
   updateShader: (shader, mode=Viewer.FRAGMENT) ->
     if mode is Viewer.FRAGMENT

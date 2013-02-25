@@ -16,6 +16,12 @@ class UI
   hideMainLoader: ->
     $('#main-loader').fadeOut(400)
 
+  showModelLoader: ->
+    $('#model-loader').fadeIn(200)
+
+  hideModelLoader: ->
+    $('#model-loader').fadeOut(400)
+
   initStatus: ->
     el = $('#status')
     span = el.children('span')

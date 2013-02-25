@@ -2,56 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Shdr - The online ESSL (GLSL) shader editor, viewer and validator.</title>
+  <title>Shdr Editor</title>
+  <meta name="description" content="Shdr is an online ESSL (GLSL) shader editor, viewer and validator powered by WebGL and built by Thibaut Despoulain (BKcore).">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
 </head>
 <body onload="init();">
 
+<!-- inline preloader -->
 <div id="main-loader" style="position: absolute; z-index: 10000; top: 0; bottom: 0; left: 0; right: 0; background: #000; color: #000; font-family: Arial, 'Ubuntu sans', sans-serif; font-size: 32px; font-weight: bold;">
   <div style="position: absolute; z-index: 10001; top: 50%; left: 0; width: 100%; background: #191919; text-align: center; line-height: 60px; margin-top: -30px; border-top: 1px solid #333; border-bottom: 1px solid #333;">
     <img src="img/loader.gif" height="32" width="32" alt="Loading..." style="margin-bottom: -4px"> Fetching stuff.
   </div>
 </div>
 
-<style type="text/css">
-  @import url('fonts/ubuntu-mono/font.css');
-  @import url('css/main.css');
-  @import url('fonts/font-awesome/font-awesome.min.css');
-</style>
-
+<!-- app structure -->
 <div id="panel-top">
   <div class="menu" id="menu-mode" data-action="mode">
-    <button class="menu-trigger"><i class="icon-pencil"></i><span>Fragment</span></button>
+    <button type="button" class="menu-trigger"><i class="icon-pencil"></i><span>Fragment</span></button>
     <div class="menu-list">
-      <button class="menu-item" data-index="0">Fragment</button>
-      <button class="menu-item" data-index="1">Vertex</button>
+      <button type="button" class="menu-item" data-index="0">Fragment</button>
+      <button type="button" class="menu-item" data-index="1">Vertex</button>
     </div>
   </div>
   <div class="menu" id="menu-update" data-action="update">
-    <button class="menu-trigger"><i class="icon-circle"></i>Auto update</button>
+    <button type="button" class="menu-trigger"><i class="icon-circle"></i>Auto update</button>
     <div class="menu-list">
-      <button class="menu-item" data-index="0"><i class="icon-circle"></i>Auto Update</button>
-      <button class="menu-item" data-index="1"><i class="icon-adjust"></i>ENTER Update</button>
-      <button class="menu-item" data-index="2"><i class="icon-circle-blank"></i>Ctrl+S Update</button>
+      <button type="button" class="menu-item" data-index="0"><i class="icon-circle"></i>Auto Update</button>
+      <button type="button" class="menu-item" data-index="1"><i class="icon-adjust"></i>ENTER Update</button>
+      <button type="button" class="menu-item" data-index="2"><i class="icon-circle-blank"></i>Ctrl+S Update</button>
     </div>
   </div>
   <div class="menu" id="menu-snippets" data-action="snippets">
-    <button class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
+    <button type="button" class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
     <div class="menu-list"></div>
   </div>
   <div class="menu" id="menu-download" data-action="download">
-    <button class="menu-button"><i class="icon-download-alt"></i>Download</button>
+    <button type="button" class="menu-button"><i class="icon-download-alt"></i>Download</button>
   </div>
   <div class="menu" id="menu-share" data-action="share">
-    <button class="menu-button"><i class="icon-share-alt"></i>Share</button>
+    <button type="button" class="menu-button"><i class="icon-share-alt"></i>Share</button>
   </div>
   <!-- LEFT/RIGHT -->
   <div class="menu menu-right" id="menu-models" data-action="models">
-    <button class="menu-trigger"><i class="icon-reorder"></i><span>Monkey (high)</span></button>
+    <button type="button" class="menu-trigger"><i class="icon-reorder"></i><span>Monkey (high)</span></button>
     <div class="menu-list"></div>
   </div>
   <div class="menu menu-right" id="menu-rotate" data-action="rotate">
-    <button class="menu-button menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
+    <button type="button" class="menu-button menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
       <i class="icon-pause" data-on="icon-pause" data-off="icon-play"></i>
     </button>
   </div>
@@ -64,6 +64,9 @@
   <div id="panel-right">
     <div id="viewer"></div>
     <div id="shdr">Shdr</div>
+    <div id="model-loader">
+      <img src="img/loader.gif" height="32" width="32" alt="Loading model...">
+    </div>
   </div>
 </div>
 
@@ -72,8 +75,8 @@
     <span class="status-success"><i class="icon-ok-sign"></i><b>Ready</b></span>
   </div>
   <div id="footer">
-    <div class="menu menu-right menu-status" id="menu-download" data-action="about">
-      <button class="menu-button"><i class="icon-info-sign"></i>About Shdr</button>
+    <div class="menu menu-right menu-status" id="menu-about" data-action="about">
+      <button type="button" class="menu-button"><i class="icon-info-sign"></i>About Shdr</button>
     </div>
   </div>
 </div>
@@ -83,7 +86,7 @@
   <div class="content">
     <input type="text" value="" id="box-share-url">
   </div>
-  <button class="close">
+  <button type="button" class="close">
     <i class="icon-remove"></i>
   </button>
 </div>
@@ -105,10 +108,10 @@
     </p>
     <p>
       Issues, feature requests, contributions:
-      <a href="https://github.com/BKcore/Shdr" target="_blan">Fork me on GitHub!</a>
+      <a href="https://github.com/BKcore/Shdr" target="_blank">Fork me on GitHub!</a>
     </p>
   </div>
-  <button class="close">
+  <button type="button" class="close">
     <i class="icon-remove"></i>
   </button>
 </div>

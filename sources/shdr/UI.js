@@ -25,6 +25,14 @@
       return $('#main-loader').fadeOut(400);
     };
 
+    UI.prototype.showModelLoader = function() {
+      return $('#model-loader').fadeIn(200);
+    };
+
+    UI.prototype.hideModelLoader = function() {
+      return $('#model-loader').fadeOut(400);
+    };
+
     UI.prototype.initStatus = function() {
       var content, el, icon, span;
       el = $('#status');

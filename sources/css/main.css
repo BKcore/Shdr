@@ -368,3 +368,33 @@ button::-moz-focus-inner {
 .hl-error {
   background: #ff0000 !important;
 }
+
+button {
+  position: relative;
+}
+
+button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#model-loader {
+  width: 32px;
+  height: 32px;
+  padding: 9px;
+  position: absolute;
+  z-index: 1004;
+  background: #191919;
+  -webkit-box-shadow: 0px 0px 16px 0px #000;
+  box-shadow: 0px 0px 16px 0px #000;
+  border: 1px solid #090909;
+  top: 50%;
+  left: 50%;
+  margin-top: -25px;
+  margin-left: -25px;
+  display: none;
+}

@@ -8,9 +8,10 @@
 
     Viewer.VERTEX = 1;
 
-    function Viewer(dom) {
+    function Viewer(dom, app) {
       var _this = this;
       this.dom = dom;
+      this.app = app;
       this.time = 0.0;
       this.rotate = true;
       this.currentModel = null;
@@ -59,9 +60,10 @@
 
     Viewer.prototype.loadModel = function(key) {
       var _this = this;
-      return this.loader.load(key, function(geo) {
+      this.loader.load(key, function(geo) {
         return _this.initModel(geo, key);
       });
+      return this.app.ui.showModelLoader();
     };
 
     Viewer.prototype.initModel = function(geo, key) {
@@ -79,7 +81,8 @@
           this.model.scale.set(data.scale, data.scale, data.scale);
         }
       }
-      return this.scene.add(this.model);
+      this.scene.add(this.model);
+      return this.app.ui.hideModelLoader();
     };
 
     Viewer.prototype.updateShader = function(shader, mode) {
