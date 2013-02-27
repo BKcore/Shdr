@@ -156,6 +156,31 @@ class App
       @ui.setStatus("Unable to unpack document: #{e.getMessage?()}",
         shdr.UI.WARNING)
 
+  shortenURL: (url, callback) ->
+    key = 'AIzaSyB46wUnmnZaPH9JkHlRizmsQw9W2SSx1x0'
+    $.ajax
+      url: "https://www.googleapis.com/urlshortener/v1/url?key=#{key}"
+      type: 'POST'
+      contentType: 'application/json'
+      dataType: 'json'
+      data:
+        JSON.stringify(longUrl: url)
+      success: (resp) =>
+        if not resp or 'error' of resp or not 'id' of resp
+          @ui.setStatus('An error occured while trying to shorten shared URL.',
+            shdr.UI.WARNING)
+          console.warn resp
+          callback?(false, null, resp)
+        else
+          @ui.setStatus('Shared URL has been shortened.',
+          shdr.UI.SUCCESS)
+          callback?(true, resp.id, resp)
+      error: (e) =>
+        callback?(false, null, e)
+        @ui.setStatus('URL shortening service is not active.',
+            shdr.UI.WARNING)
+        console.warn 'ERROR: ', e
+
   download: ->
     try
       blob = new Blob([@editor.getSession().getValue()],

@@ -52,15 +52,28 @@
     };
 
     UI.prototype.initBoxes = function() {
+      var shareurl, shortenurl,
+        _this = this;
       this.boxes = {
         share: $('#box-share'),
         about: $('#box-about')
       };
-      this.boxes.share.find('#box-share-url').on('click', function(e) {
+      $('.box .close').on('click', function(e) {
+        return $(this).parent().fadeOut(200);
+      });
+      shareurl = this.boxes.share.find('#box-share-url');
+      shortenurl = this.boxes.share.find('#box-share-shorten');
+      shareurl.on('click', function(e) {
         return $(this).select();
       });
-      return $('.box .close').on('click', function(e) {
-        return $(this).parent().fadeOut(200);
+      return shortenurl.on('click', function(e) {
+        shortenurl.text('Wait...');
+        return _this.app.shortenURL(shareurl.val(), function(status, url, resp) {
+          if (status && url) {
+            _this.boxes.share.find('#box-share-url').val(url);
+          }
+          return shortenurl.text('Shorten');
+        });
       });
     };
 

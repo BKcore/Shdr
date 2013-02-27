@@ -198,6 +198,38 @@
       }
     };
 
+    App.prototype.shortenURL = function(url, callback) {
+      var key,
+        _this = this;
+      key = 'AIzaSyB46wUnmnZaPH9JkHlRizmsQw9W2SSx1x0';
+      return $.ajax({
+        url: "https://www.googleapis.com/urlshortener/v1/url?key=" + key,
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify({
+          longUrl: url
+        }),
+        success: function(resp) {
+          if (!resp || 'error' in resp || !'id' in resp) {
+            _this.ui.setStatus('An error occured while trying to shorten shared URL.', shdr.UI.WARNING);
+            console.warn(resp);
+            return typeof callback === "function" ? callback(false, null, resp) : void 0;
+          } else {
+            _this.ui.setStatus('Shared URL has been shortened.', shdr.UI.SUCCESS);
+            return typeof callback === "function" ? callback(true, resp.id, resp) : void 0;
+          }
+        },
+        error: function(e) {
+          if (typeof callback === "function") {
+            callback(false, null, e);
+          }
+          _this.ui.setStatus('URL shortening service is not active.', shdr.UI.WARNING);
+          return console.warn('ERROR: ', e);
+        }
+      });
+    };
+
     App.prototype.download = function() {
       var blob, url, win;
       try {

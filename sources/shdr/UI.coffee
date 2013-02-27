@@ -40,12 +40,18 @@ class UI
     @boxes =
       share: $('#box-share')
       about: $('#box-about')
-    @boxes.share.find('#box-share-url').on('click', (e) ->
-      $(this).select()
-    )
-    $('.box .close').on('click', (e) ->
+    $('.box .close').on 'click', (e) ->
       $(this).parent().fadeOut(200)
-    )
+    shareurl = @boxes.share.find('#box-share-url')
+    shortenurl = @boxes.share.find('#box-share-shorten')
+    shareurl.on 'click', (e) ->
+      $(this).select()
+    shortenurl.on 'click', (e) =>
+      shortenurl.text('Wait...')
+      @app.shortenURL shareurl.val(), (status, url, resp) =>
+        if status and url
+          @boxes.share.find('#box-share-url').val(url)
+        shortenurl.text('Shorten')
 
   initButtons: ->
     $('.menu-button').on('click', (e) => @onButton(e))
@@ -125,13 +131,13 @@ class UI
     el.addClass('open')
     list.slideDown(200)
 
-    $(document).on('click.menu-trigger', () => 
+    $(document).on 'click.menu-trigger', () => 
       @offMenuTrigger(el, list)
-    )
+
     el.off('click.on')
-    el.on('click.off', (e) =>
+    el.on 'click.off', (e) =>
       @offMenuTrigger(el, list)
-    )
+
     event.stopPropagation()
 
   offMenuTrigger: (el, list) ->
