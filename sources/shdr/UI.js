@@ -274,6 +274,16 @@
       return this.boxes.about.fadeIn(200);
     };
 
+    UI.prototype.helpAction = function() {
+      var win;
+      win = window.open('https://github.com/BKcore/Shdr/wiki/Help', '_blank');
+      if (win) {
+        return win.focus();
+      } else {
+        return this.ui.setStatus('Your browser as blocked the Help window, please disable your popup blocker.', shdr.UI.WARNING);
+      }
+    };
+
     return UI;
 
   })();

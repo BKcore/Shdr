@@ -191,5 +191,14 @@ class UI
   aboutAction: ->
     @boxes.about.fadeIn(200)
 
+  helpAction: ->
+    win = window.open('https://github.com/BKcore/Shdr/wiki/Help',
+      '_blank')
+    if win
+      win.focus()
+    else
+      @ui.setStatus('Your browser as blocked the Help window, please disable your popup blocker.',
+      shdr.UI.WARNING)
+
 @shdr ||= {}
 @shdr.UI = UI
