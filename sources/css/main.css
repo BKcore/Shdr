@@ -184,7 +184,7 @@ body {
   display: none;
 }
 
-.menu-item, .menu-trigger, .menu-button {
+.menu-item, .menu-trigger, .menu-button, .menu-toggle {
   cursor: pointer;
   display: block;
   height: 40px;
@@ -235,9 +235,9 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.menu-item:hover, .menu-trigger:hover, .menu-button:hover,
-.menu-item:focus, .menu-trigger:focus, .menu-button:focus,
-.menu-item:active, .menu-trigger:active, .menu-button:active {
+.menu-toggle:hover, .menu-item:hover, .menu-trigger:hover, .menu-button:hover,
+.menu-toggle:focus, .menu-item:focus, .menu-trigger:focus, .menu-button:focus,
+.menu-toggle:active, .menu-item:active, .menu-trigger:active, .menu-button:active {
   color: #ffffff;
   background: #222222;
 }
@@ -246,7 +246,7 @@ button::-moz-focus-inner {
   float: right !important;
 }
 
-.menu-item i, .menu-trigger i, .menu-button i {
+.menu-item i, .menu-trigger i, .menu-button i, .menu-toggle i {
   margin-right: 6px;
   font-size: 14px;
 }
