@@ -5,6 +5,9 @@
   <title>Shdr Editor</title>
   <meta name="description" content="Shdr is a live ESSL (GLSL) shader editor, viewer and validator powered by WebGL and built by Thibaut Despoulain (BKcore).">
   <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="9aMzbIqnVsSKifyPR9OdN8HoKfTbsE3W8lSQ9M66zwk">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="shortcut icon" href="/favicon.png" type="image/png">
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
@@ -51,7 +54,7 @@
     <div class="menu-list"></div>
   </div>
   <div class="menu menu-right" id="menu-rotate" data-action="rotate">
-    <button type="button" class="menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
+    <button type="button" class="menu-button menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
       <i class="icon-pause" data-on="icon-pause" data-off="icon-play"></i>
     </button>
   </div>
@@ -59,7 +62,7 @@
 
 <div id="panel-main">
   <div id="panel-left">
-  	<div id="editor"></div>
+    <div id="editor"></div>
   </div>
   <div id="panel-right">
     <div id="viewer"></div>
@@ -123,24 +126,10 @@
 <div id="top-separator"></div>
 <div id="bottom-separator"></div>
 	
-<script src="libs/threejs/three.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/threejs/three.orbit.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/threejs/three.webglrenderer.custom.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/zip/rawdeflate.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/zip/rawinflate.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/jquery-1.8.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="shdr/Validator.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Storage.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/UI.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Snippets.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Models.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Viewer.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/App.js" type="text/javascript" charset="utf-8"></script>
+<script src="build/shdr.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
-
+  
 	function init() {
 		var app = new shdr.App("editor", "viewer");
 		window.app = app;
