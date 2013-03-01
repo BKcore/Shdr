@@ -198,6 +198,13 @@ class App
         shdr.UI.WARNING)
     url
 
+  save: (name) ->
+    obj =
+      documents: @documents
+      name: name
+      date: +Date.now()
+    shdr.Storage.add(name, obj);
+
   updateDocument: ->
     @documents[@conf.mode] = @editor.getSession().getValue()
 

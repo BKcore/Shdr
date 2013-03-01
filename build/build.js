@@ -22,6 +22,7 @@ var files = [
 	base+"shdr/App.js",
 	base+"shdr/Models.js",
 	base+"shdr/Snippets.js",
+	base+"shdr/Storage.js",
 	base+"shdr/UI.js",
 	base+"shdr/Validator.js",
 	base+"shdr/Viewer.js"

@@ -249,6 +249,16 @@
       return url;
     };
 
+    App.prototype.save = function(name) {
+      var obj;
+      obj = {
+        documents: this.documents,
+        name: name,
+        date: +Date.now()
+      };
+      return shdr.Storage.add(name, obj);
+    };
+
     App.prototype.updateDocument = function() {
       return this.documents[this.conf.mode] = this.editor.getSession().getValue();
     };
