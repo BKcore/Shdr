@@ -79,6 +79,11 @@
 
     UI.prototype.initButtons = function() {
       var _this = this;
+      $('#save-name').on('click', function(e) {
+        e.stopPropagation();
+        $(_this).focus();
+        return false;
+      });
       return $('.menu-button').on('click', function(e) {
         return _this.onButton(e);
       });

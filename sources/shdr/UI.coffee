@@ -54,6 +54,10 @@ class UI
         shortenurl.text('Shorten')
 
   initButtons: ->
+    $('#save-name').on 'click', (e) =>
+      e.stopPropagation()
+      $(this).focus()
+      false
     $('.menu-button').on('click', (e) => @onButton(e))
 
   initToggles: ->

@@ -184,7 +184,7 @@ body {
   display: none;
 }
 
-.menu-item, .menu-trigger, .menu-button, .menu-toggle {
+.menu-item, .menu-trigger, .menu-button, .menu-toggle, .menu-blank {
   cursor: pointer;
   display: block;
   height: 40px;
@@ -408,4 +408,28 @@ button:before {
   margin-top: -25px;
   margin-left: -25px;
   display: none;
+}
+
+.menu-blank {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+
+#save-name {
+  margin: 0 !important;
+  /*display: none;*/
+  cursor: text !important;
+  background: #111;
+  border: none;
+  width: 80px;
+  line-height: 26px;
+  height: 26px;
+  color: #999;
+  padding: 0px 4px;
+  padding:0;
+  -webkit-box-shadow: inset 0px 4px 6px 0px #060606, 0px 1px 0px 0px #333333;
+  box-shadow: inset 0px 4px 6px 0px #060606, 0px 1px 0px 0px #333333; 
 }
