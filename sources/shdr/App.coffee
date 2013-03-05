@@ -96,6 +96,9 @@ class App
 
   initFromURL: ->
     obj = @unpackURL()
+    @initDocuments(obj)
+
+  initDocuments: (obj) ->
     if obj and obj.documents and obj.documents.length is 2
       @documents = obj.documents
       fs = @documents[App.FRAGMENT]
@@ -107,24 +110,24 @@ class App
         @viewer.updateShader(fs, App.FRAGMENT)
         @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)        
         @ui.setMenuMode(App.FRAGMENT)
-        @ui.setStatus("Shaders successfully loaded and compiled from URL.",
+        @ui.setStatus("Shaders successfully loaded and compiled.",
           shdr.UI.SUCCESS)
       else if _vs
         @viewer.updateShader(vs, App.VERTEX)
         @setMode(App.FRAGMENT, true)
         @ui.setMenuMode(App.FRAGMENT)
-        @ui.setStatus("Shaders loaded from URL but Fragment could not compile. Line #{fl} : #{fm}",
+        @ui.setStatus("Shaders loaded but Fragment could not compile. Line #{fl} : #{fm}",
           shdr.UI.WARNING)
       else if _fs
         @viewer.updateShader(fs, App.FRAGMENT)
         @setMode(App.VERTEX, true)
         @ui.setMenuMode(App.VERTEX)
-        @ui.setStatus("Shaders loaded from URL but Vertex could not compile. Line #{vl} : #{vm}",
+        @ui.setStatus("Shaders loaded but Vertex could not compile. Line #{vl} : #{vm}",
           shdr.UI.WARNING)
       else
         @setMode(App.VERTEX, true)
         @ui.setMenuMode(App.VERTEX)
-        @ui.setStatus("Shaders loaded from URL but could not compile. Line #{vl} : #{vm}",
+        @ui.setStatus("Shaders loaded but could not compile. Line #{vl} : #{vm}",
           shdr.UI.WARNING)
       @editor.focus()
       true
@@ -199,11 +202,22 @@ class App
     url
 
   save: (name) ->
+    @updateDocument()
     obj =
       documents: @documents
       name: name
       date: +Date.now()
-    shdr.Storage.add(name, obj);
+    shdr.Storage.addDocument(name, obj)
+    @ui.setStatus("Shaders saved as '#{name}'.",
+      shdr.UI.SUCCESS)
+
+  load: (name) ->
+    obj = shdr.Storage.getDocument(name)
+    if obj?
+      @initDocuments(obj)
+    else
+      @ui.setStatus("'#{name}' Shaders do not exist.",
+        shdr.UI.WARNING)
 
   updateDocument: ->
     @documents[@conf.mode] = @editor.getSession().getValue()

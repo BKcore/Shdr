@@ -6,64 +6,100 @@
 
     function Storage() {}
 
+    Storage.PREFIX_SIZE = 4;
+
+    Storage.DOC_PREFIX = 'doc_';
+
+    Storage.SET_PREFIX = 'set_';
+
     Storage.available = 'localStorage' in window;
 
-    Storage.list = function() {
-      if (!Storage.available) {
-        return [];
-      }
-      return localStorage.data;
-    };
-
-    Storage.add = function(name, obj, overwrite) {
-      var key;
+    Storage.addDocument = function(name, obj, overwrite) {
       if (overwrite == null) {
         overwrite = true;
       }
-      if (!Storage.available) {
-        return false;
-      }
-      if (name in localStorage.data && !overwrite) {
-        return false;
-      }
-      key = name + "";
-      localStorage.data[key] = obj;
-      return true;
+      return this.addObject(this.DOC_PREFIX + name, obj, overwrite);
     };
 
-    Storage.get = function(name) {
-      if (!Storage.available || !name in localStorage.data) {
+    Storage.addSetting = function(name, str, overwrite) {
+      if (overwrite == null) {
+        overwrite = true;
+      }
+      return this.addString(this.SET_PREFIX + name, str, overwrite);
+    };
+
+    Storage.addObject = function(key, obj, overwrite) {
+      if (overwrite == null) {
+        overwrite = true;
+      }
+      return this.addString(key, JSON.stringify(obj), overwrite);
+    };
+
+    Storage.addString = function(key, str, overwrite) {
+      if (overwrite == null) {
+        overwrite = true;
+      }
+      if ((localStorage[key] != null) && !overwrite) {
+        return false;
+      }
+      return localStorage[key] = str;
+    };
+
+    Storage.getDocument = function(name) {
+      return this.getObject(this.DOC_PREFIX + name);
+    };
+
+    Storage.getSetting = function(name) {
+      return this.getString(this.SET_PREFIX + name);
+    };
+
+    Storage.getObject = function(key) {
+      return JSON.parse(this.getString(key));
+    };
+
+    Storage.getString = function(key) {
+      if (!(localStorage[key] != null)) {
         return null;
       }
-      return localStorage.data[name];
+      return localStorage[key];
     };
 
-    Storage.clear = function() {
-      if (!Storage.available) {
-        return;
-      }
-      return localStorage['data'] = {};
+    Storage.listDocuments = function() {
+      return this._listByPrefix(this.DOC_PREFIX);
+    };
+
+    Storage.clearDocuments = function() {
+      return this._clearByPrefix(this.DOC_PREFIX);
     };
 
     Storage.clearSettings = function() {
-      if (!Storage.available) {
-        return;
+      return this._clearByPrefix(this.SET_PREFIX);
+    };
+
+    Storage._listByPrefix = function(prefix) {
+      var k, list;
+      list = [];
+      for (k in localStorage) {
+        if (k.substr(0, this.PREFIX_SIZE) === prefix) {
+          list.push(k.substr(this.PREFIX_SIZE));
+        }
       }
-      return localStorage['settings'] = {};
+      return list;
+    };
+
+    Storage._clearByPrefix = function(prefix) {
+      var e, list, _i, _len;
+      list = this._listByPrefix(prefix);
+      for (_i = 0, _len = list.length; _i < _len; _i++) {
+        e = list[_i];
+        delete localStorage[prefix + e];
+      }
+      return list.length;
     };
 
     return Storage;
 
   })();
-
-  if (Storage.available) {
-    if (!'settings' in localStorage) {
-      Storage.clearSettings();
-    }
-    if (!'data' in localStorage) {
-      Storage.clear();
-    }
-  }
 
   this.shdr || (this.shdr = {});
 

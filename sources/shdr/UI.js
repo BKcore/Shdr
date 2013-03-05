@@ -10,6 +10,8 @@
 
     UI.WARNING = 2;
 
+    UI.INFO = 3;
+
     function UI(app) {
       this.app = app;
       this.initStatus();
@@ -79,7 +81,10 @@
 
     UI.prototype.initButtons = function() {
       var _this = this;
-      $('#save-name').on('click', function(e) {
+      this.inputs = {
+        savename: $('#save-name')
+      };
+      this.inputs.savename.on('click', function(e) {
         e.stopPropagation();
         $(_this).focus();
         return false;
@@ -146,6 +151,10 @@
         case UI.WARNING:
           this.status.span.addClass('status-warning');
           this.status.icon.addClass('icon-warning-sign');
+          break;
+        case UI.INFO:
+          this.status.span.addClass('status-info');
+          this.status.icon.addClass('icon-info-sign');
       }
       return this.status.content.text(message);
     };
@@ -286,6 +295,18 @@
         return win.focus();
       } else {
         return this.ui.setStatus('Your browser as blocked the Help window, please disable your popup blocker.', shdr.UI.WARNING);
+      }
+    };
+
+    UI.prototype.saveAction = function(_, __, el) {
+      var menuname;
+      menuname = $('#menu-name');
+      if (!menuname.is(':visible')) {
+        menuname.fadeIn(200);
+        this.inputs.savename.val('Untitled');
+        return this.setStatus('Please enter a file name, then hit the save button once again.', UI.INFO);
+      } else {
+        return this.app.save(this.inputs.savename.val());
       }
     };
 

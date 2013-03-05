@@ -130,8 +130,13 @@
     };
 
     App.prototype.initFromURL = function() {
-      var fl, fm, fs, obj, vl, vm, vs, _fs, _ref, _ref1, _vs;
+      var obj;
       obj = this.unpackURL();
+      return this.initDocuments(obj);
+    };
+
+    App.prototype.initDocuments = function(obj) {
+      var fl, fm, fs, vl, vm, vs, _fs, _ref, _ref1, _vs;
       if (obj && obj.documents && obj.documents.length === 2) {
         this.documents = obj.documents;
         fs = this.documents[App.FRAGMENT];
@@ -143,21 +148,21 @@
           this.viewer.updateShader(fs, App.FRAGMENT);
           this.editor.getSession().setValue(this.conf.mode === App.VERTEX ? vs : fs);
           this.ui.setMenuMode(App.FRAGMENT);
-          this.ui.setStatus("Shaders successfully loaded and compiled from URL.", shdr.UI.SUCCESS);
+          this.ui.setStatus("Shaders successfully loaded and compiled.", shdr.UI.SUCCESS);
         } else if (_vs) {
           this.viewer.updateShader(vs, App.VERTEX);
           this.setMode(App.FRAGMENT, true);
           this.ui.setMenuMode(App.FRAGMENT);
-          this.ui.setStatus("Shaders loaded from URL but Fragment could not compile. Line " + fl + " : " + fm, shdr.UI.WARNING);
+          this.ui.setStatus("Shaders loaded but Fragment could not compile. Line " + fl + " : " + fm, shdr.UI.WARNING);
         } else if (_fs) {
           this.viewer.updateShader(fs, App.FRAGMENT);
           this.setMode(App.VERTEX, true);
           this.ui.setMenuMode(App.VERTEX);
-          this.ui.setStatus("Shaders loaded from URL but Vertex could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
+          this.ui.setStatus("Shaders loaded but Vertex could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
         } else {
           this.setMode(App.VERTEX, true);
           this.ui.setMenuMode(App.VERTEX);
-          this.ui.setStatus("Shaders loaded from URL but could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
+          this.ui.setStatus("Shaders loaded but could not compile. Line " + vl + " : " + vm, shdr.UI.WARNING);
         }
         this.editor.focus();
         return true;
@@ -251,12 +256,24 @@
 
     App.prototype.save = function(name) {
       var obj;
+      this.updateDocument();
       obj = {
         documents: this.documents,
         name: name,
         date: +Date.now()
       };
-      return shdr.Storage.add(name, obj);
+      shdr.Storage.addDocument(name, obj);
+      return this.ui.setStatus("Shaders saved as '" + name + "'.", shdr.UI.SUCCESS);
+    };
+
+    App.prototype.load = function(name) {
+      var obj;
+      obj = shdr.Storage.getDocument(name);
+      if (obj != null) {
+        return this.initDocuments(obj);
+      } else {
+        return this.ui.setStatus("'" + name + "' Shaders do not exist.", shdr.UI.WARNING);
+      }
     };
 
     App.prototype.updateDocument = function() {

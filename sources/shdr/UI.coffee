@@ -3,6 +3,7 @@ class UI
   @ERROR: 0
   @SUCCESS: 1
   @WARNING: 2
+  @INFO: 3
 
   constructor: (@app) ->
     @initStatus()
@@ -54,7 +55,9 @@ class UI
         shortenurl.text('Shorten')
 
   initButtons: ->
-    $('#save-name').on 'click', (e) =>
+    @inputs =
+      savename: $('#save-name')
+    @inputs.savename.on 'click', (e) =>
       e.stopPropagation()
       $(this).focus()
       false
@@ -95,6 +98,9 @@ class UI
       when UI.WARNING
         @status.span.addClass('status-warning')
         @status.icon.addClass('icon-warning-sign')
+      when UI.INFO
+        @status.span.addClass('status-info')
+        @status.icon.addClass('icon-info-sign')
     @status.content.text(message)
 
   setMenuMode: (mode) ->
@@ -203,6 +209,16 @@ class UI
     else
       @ui.setStatus('Your browser as blocked the Help window, please disable your popup blocker.',
       shdr.UI.WARNING)
+
+  saveAction: (_,__,el) ->
+    menuname = $('#menu-name')
+    if not menuname.is(':visible')
+      menuname.fadeIn(200)
+      @inputs.savename.val('Untitled')
+      @setStatus('Please enter a file name, then hit the save button once again.', UI.INFO)
+    else
+      @app.save(@inputs.savename.val())
+
 
 @shdr ||= {}
 @shdr.UI = UI

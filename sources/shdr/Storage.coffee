@@ -1,35 +1,57 @@
 class Storage
 
+  @PREFIX_SIZE: 4
+  @DOC_PREFIX: 'doc_'
+  @SET_PREFIX: 'set_'
+
   @available: 'localStorage' of window
 
-  @list: ->
-    return [] if not Storage.available
-    return localStorage.data
+  @addDocument: (name, obj, overwrite=true) ->
+    @addObject(@DOC_PREFIX+name, obj, overwrite)
 
-  @add: (name, obj, overwrite=true) ->
-    return false if not Storage.available
-    return false if name of localStorage.data and not overwrite
-    key = name+""
-    localStorage.data[key] = obj
-    true
+  @addSetting: (name, str, overwrite=true) ->
+    @addString(@SET_PREFIX+name, str, overwrite)
 
-  @get: (name) ->
-    return null if not Storage.available or not name of localStorage.data
-    return localStorage.data[name]
+  @addObject: (key, obj, overwrite=true) ->
+    @addString(key, JSON.stringify(obj), overwrite)
 
-  @clear: ->
-    return if not Storage.available
-    localStorage['data'] = {}
+  @addString: (key, str, overwrite=true) ->
+    return false if localStorage[key]? and not overwrite
+    localStorage[key] = str
+
+  @getDocument: (name) ->
+    return @getObject(@DOC_PREFIX+name)
+
+  @getSetting: (name) ->
+    return @getString(@SET_PREFIX+name)
+
+  @getObject: (key) ->
+    return JSON.parse(@getString(key))
+
+  @getString: (key) ->
+    return null if not localStorage[key]?
+    return localStorage[key]
+
+  @listDocuments: ->
+    return @_listByPrefix(@DOC_PREFIX)
+
+  @clearDocuments: ->
+    @_clearByPrefix(@DOC_PREFIX)
 
   @clearSettings: ->
-    return if not Storage.available
-    localStorage['settings'] = {}
+    @_clearByPrefix(@SET_PREFIX)
 
-if Storage.available
-  if not 'settings' of localStorage
-    Storage.clearSettings()
-  if not 'data' of localStorage
-    Storage.clear()
+  @_listByPrefix: (prefix) ->
+    list = []
+    for k of localStorage
+      if k.substr(0, @PREFIX_SIZE) is prefix
+        list.push(k.substr(@PREFIX_SIZE))
+    list
+
+  @_clearByPrefix: (prefix) ->
+    list = @_listByPrefix(prefix)
+    delete localStorage[prefix+e] for e in list
+    list.length
 
 @shdr ||= {}
 @shdr.Storage = Storage
