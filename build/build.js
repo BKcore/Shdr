@@ -29,7 +29,7 @@ var files = [
 	base+"shdr/Viewer.js",
 	base+"shdr/Bootstrap.js"
 ];
-var chrome_output = "shdr-chrome.crx";
+var chrome_output = "shdr-chrome.zip";
 var chrome_dir = "shdr-chrome";
 var chrome_iconspath = root+"icons/";
 var chrome_icons = [
