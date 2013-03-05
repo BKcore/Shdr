@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
 </head>
-<body onload="init();">
+<body>
 
 <!-- inline preloader -->
 <div id="main-loader" style="position: absolute; z-index: 10000; top: 0; bottom: 0; left: 0; right: 0; background: #000; color: #000; font-family: Arial, 'Ubuntu sans', sans-serif; font-size: 32px; font-weight: bold;">
@@ -147,14 +147,7 @@
 <script src="shdr/Viewer.js" type="text/javascript" charset="utf-8"></script>
 <script src="shdr/App.js" type="text/javascript" charset="utf-8"></script>
 
-<script>
-
-	function init() {
-		var app = new shdr.App("editor", "viewer");
-		window.app = app;
-  } 
-
-</script>
+<script src="shdr/Bootstrap.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>

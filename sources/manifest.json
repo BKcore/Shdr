@@ -1,7 +1,8 @@
 {
   "name": "Shdr",
   "description": "Shdr is a live ESSL (GLSL) shader editor, viewer and validator powered by WebGL and built by Thibaut Despoulain (BKcore).",
-  "version": "0.1.130228",
+  "version": "0.1.1302.28",
+  "manifest_version": 2,
 
   "app": {
     "launch": {
@@ -15,7 +16,7 @@
     "48": "icon_048.png",
     "128": "icon_128.png",
     "256": "icon_256.png",
-    "512": "icon_512.png",
+    "512": "icon_512.png"
   },
 
   "permissions": [

@@ -26,7 +26,8 @@ var files = [
 	base+"shdr/Storage.js",
 	base+"shdr/UI.js",
 	base+"shdr/Validator.js",
-	base+"shdr/Viewer.js"
+	base+"shdr/Viewer.js",
+	base+"shdr/Bootstrap.js"
 ];
 var chrome_output = "shdr-chrome.crx";
 var chrome_dir = "shdr-chrome";
@@ -99,6 +100,7 @@ function main() {
 	var parser = new argparse.ArgumentParser();
 	parser.addArgument(['--minify'], { action: 'storeTrue', defaultValue: false });
 	parser.addArgument(['--chromeapp'], { action: 'storeTrue', defaultValue: false });
+	parser.addArgument(['--persist'], { action: 'storeTrue', defaultValue: false });
 	parser.addArgument(['--output'], { defaultValue: 'shdr.js' });
 
 	var args = parser.parseArgs();
@@ -199,8 +201,11 @@ function main() {
 			console.log(e);
 		}
 
-		console.log(' * Cleaning up...');
-		recrmdirSync(chrome_dir);
+		if(!args.persist)
+		{
+			console.log(' * Cleaning up...');
+			recrmdirSync(chrome_dir);
+		}
 
 		console.log(' * Chrome app built to '+chrome_output);
 	
