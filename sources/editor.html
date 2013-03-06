@@ -20,12 +20,23 @@
 
 <!-- app structure -->
 <div id="panel-top">
+  <div class="menu" id="menu-new" data-action="new">
+    <button type="button" class="menu-trigger  menu-icon-only"><i class="icon-file"></i></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
+      <button type="button" class="menu-item" data-index="cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-load" data-action="load">
+    <button type="button" class="menu-trigger menu-icon-only"><i class="icon-folder-open-alt"></i></button>
+    <div class="menu-list"></div>
+  </div>
   <div class="menu" id="menu-save" data-action="save">
     <button type="button" class="menu-button  menu-icon-only"><i class="icon-save"></i></button>
   </div>
   <div class="menu" id="menu-name" data-action="name">
     <div class="menu-blank">
-      <input type="text" value="" id="save-name">
+      <input type="text" value="Untitled" id="save-name">
     </div>
   </div>
   <div class="menu" id="menu-mode" data-action="mode">

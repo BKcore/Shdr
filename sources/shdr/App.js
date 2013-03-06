@@ -263,6 +263,7 @@
         date: +Date.now()
       };
       shdr.Storage.addDocument(name, obj);
+      this.ui.resetLoadFiles();
       return this.ui.setStatus("Shaders saved as '" + name + "'.", shdr.UI.SUCCESS);
     };
 
@@ -274,6 +275,16 @@
       } else {
         return this.ui.setStatus("'" + name + "' Shaders do not exist.", shdr.UI.WARNING);
       }
+    };
+
+    App.prototype["new"] = function() {
+      var obj;
+      obj = {
+        documents: [shdr.Snippets.DefaultFragment, shdr.Snippets.DefaultVertex],
+        name: 'Untitled'
+      };
+      this.initDocuments(obj);
+      return this.ui.setStatus('Editor reset using default shaders.', shdr.UI.SUCCESS);
     };
 
     App.prototype.updateDocument = function() {

@@ -13,6 +13,7 @@ class UI
     @initToggles()
     @initButtons()
     @initBoxes()
+    @resetLoadFiles()
 
   hideMainLoader: ->
     $('#main-loader').fadeOut(400)
@@ -25,6 +26,12 @@ class UI
 
   displayWebGLError: ->
     $('#main-loader div').text('WebGL support missing.')
+
+  resetLoadFiles: ->
+    tpl = ""
+    for d in shdr.Storage.listDocuments()
+      tpl += "<button type='button' class='menu-item' data-index='#{d}'>#{d}</button>\n"      
+    @lists.files.html(tpl)
 
   initStatus: ->
     el = $('#status')
@@ -68,7 +75,10 @@ class UI
 
   initMenus: ->
     $('.menu-trigger').on('click.on', (e) => @onMenuTrigger(e))
-    $('.menu-item').on('click', (e) => @onMenuItem(e))
+    $(document).on('click', '.menu-item', (e) => @onMenuItem(e))
+    @lists =
+      files: $('#menu-load .menu-list')
+      models: $('#menu-models .menu-list')
 
   initSnippets: ->
     list = $('#menu-snippets .menu-list')
@@ -219,6 +229,16 @@ class UI
     else
       @app.save(@inputs.savename.val())
 
+  loadAction: (index) ->
+    @app.load(index)
+
+  newAction: (confirm) ->
+    if confirm is "confirm"
+      @app.new()
+      @inputs.savename.val('Untitled')
+      menuname = $('#menu-name')
+      if menuname.is(':visible')
+       menuname.fadeOut(200)
 
 @shdr ||= {}
 @shdr.UI = UI

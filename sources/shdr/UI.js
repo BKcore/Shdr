@@ -21,6 +21,7 @@
       this.initToggles();
       this.initButtons();
       this.initBoxes();
+      this.resetLoadFiles();
     }
 
     UI.prototype.hideMainLoader = function() {
@@ -37,6 +38,17 @@
 
     UI.prototype.displayWebGLError = function() {
       return $('#main-loader div').text('WebGL support missing.');
+    };
+
+    UI.prototype.resetLoadFiles = function() {
+      var d, tpl, _i, _len, _ref;
+      tpl = "";
+      _ref = shdr.Storage.listDocuments();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        d = _ref[_i];
+        tpl += "<button type='button' class='menu-item' data-index='" + d + "'>" + d + "</button>\n";
+      }
+      return this.lists.files.html(tpl);
     };
 
     UI.prototype.initStatus = function() {
@@ -106,9 +118,13 @@
       $('.menu-trigger').on('click.on', function(e) {
         return _this.onMenuTrigger(e);
       });
-      return $('.menu-item').on('click', function(e) {
+      $(document).on('click', '.menu-item', function(e) {
         return _this.onMenuItem(e);
       });
+      return this.lists = {
+        files: $('#menu-load .menu-list'),
+        models: $('#menu-models .menu-list')
+      };
     };
 
     UI.prototype.initSnippets = function() {
@@ -307,6 +323,22 @@
         return this.setStatus('Please enter a file name, then hit the save button once again.', UI.INFO);
       } else {
         return this.app.save(this.inputs.savename.val());
+      }
+    };
+
+    UI.prototype.loadAction = function(index) {
+      return this.app.load(index);
+    };
+
+    UI.prototype.newAction = function(confirm) {
+      var menuname;
+      if (confirm === "confirm") {
+        this.app["new"]();
+        this.inputs.savename.val('Untitled');
+        menuname = $('#menu-name');
+        if (menuname.is(':visible')) {
+          return menuname.fadeOut(200);
+        }
       }
     };
 

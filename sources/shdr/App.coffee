@@ -208,6 +208,7 @@ class App
       name: name
       date: +Date.now()
     shdr.Storage.addDocument(name, obj)
+    @ui.resetLoadFiles()
     @ui.setStatus("Shaders saved as '#{name}'.",
       shdr.UI.SUCCESS)
 
@@ -218,6 +219,17 @@ class App
     else
       @ui.setStatus("'#{name}' Shaders do not exist.",
         shdr.UI.WARNING)
+
+  new: ->
+    obj =
+      documents: [
+        shdr.Snippets.DefaultFragment
+        shdr.Snippets.DefaultVertex
+      ]
+      name: 'Untitled'
+    @initDocuments(obj)
+    @ui.setStatus('Editor reset using default shaders.',
+      shdr.UI.SUCCESS)
 
   updateDocument: ->
     @documents[@conf.mode] = @editor.getSession().getValue()
