@@ -68,6 +68,23 @@
       return this._listByPrefix(this.DOC_PREFIX);
     };
 
+    Storage.removeDocument = function(name) {
+      return this.remove(this.DOC_PREFIX + name);
+    };
+
+    Storage.removeSetting = function(name) {
+      return this.remove(this.SET_PREFIX + name);
+    };
+
+    Storage.remove = function(key) {
+      if (key in localStorage) {
+        delete localStorage[key];
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     Storage.clearDocuments = function() {
       return this._clearByPrefix(this.DOC_PREFIX);
     };

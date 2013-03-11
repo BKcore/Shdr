@@ -433,6 +433,6 @@ button:before {
   box-shadow: inset 0px 4px 6px 0px #060606, 0px 1px 0px 0px #333333; 
 }
 
-#menu-name {
+#menu-name, #menu-remove {
   display: none;
 }

@@ -35,6 +35,19 @@ class Storage
   @listDocuments: ->
     return @_listByPrefix(@DOC_PREFIX)
 
+  @removeDocument: (name) ->
+    @remove(@DOC_PREFIX+name)
+
+  @removeSetting: (name) ->
+    @remove(@SET_PREFIX+name)
+
+  @remove: (key) ->
+    if key of localStorage
+      delete localStorage[key]
+      true
+    else
+      false
+
   @clearDocuments: ->
     @_clearByPrefix(@DOC_PREFIX)
 

@@ -216,9 +216,11 @@ class App
     obj = shdr.Storage.getDocument(name)
     if obj?
       @initDocuments(obj)
+      true
     else
       @ui.setStatus("'#{name}' Shaders do not exist.",
         shdr.UI.WARNING)
+      false
 
   new: ->
     obj =
@@ -230,6 +232,18 @@ class App
     @initDocuments(obj)
     @ui.setStatus('Editor reset using default shaders.',
       shdr.UI.SUCCESS)
+    @ui.clearName('Untitled')
+
+  remove: (name, reset=false) ->
+    removed = shdr.Storage.removeDocument(name)
+    if removed
+      @new() if reset
+      @ui.resetLoadFiles()
+      @ui.setStatus("'#{name}' Shaders removed.",
+        shdr.UI.INFO)
+    else
+      @ui.setStatus("Unable to remove '#{name}'. Shaders do not exist.",
+        shdr.UI.WARNING)
 
   updateDocument: ->
     @documents[@conf.mode] = @editor.getSession().getValue()

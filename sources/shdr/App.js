@@ -271,9 +271,11 @@
       var obj;
       obj = shdr.Storage.getDocument(name);
       if (obj != null) {
-        return this.initDocuments(obj);
+        this.initDocuments(obj);
+        return true;
       } else {
-        return this.ui.setStatus("'" + name + "' Shaders do not exist.", shdr.UI.WARNING);
+        this.ui.setStatus("'" + name + "' Shaders do not exist.", shdr.UI.WARNING);
+        return false;
       }
     };
 
@@ -284,7 +286,25 @@
         name: 'Untitled'
       };
       this.initDocuments(obj);
-      return this.ui.setStatus('Editor reset using default shaders.', shdr.UI.SUCCESS);
+      this.ui.setStatus('Editor reset using default shaders.', shdr.UI.SUCCESS);
+      return this.ui.clearName('Untitled');
+    };
+
+    App.prototype.remove = function(name, reset) {
+      var removed;
+      if (reset == null) {
+        reset = false;
+      }
+      removed = shdr.Storage.removeDocument(name);
+      if (removed) {
+        if (reset) {
+          this["new"]();
+        }
+        this.ui.resetLoadFiles();
+        return this.ui.setStatus("'" + name + "' Shaders removed.", shdr.UI.INFO);
+      } else {
+        return this.ui.setStatus("Unable to remove '" + name + "'. Shaders do not exist.", shdr.UI.WARNING);
+      }
     };
 
     App.prototype.updateDocument = function() {

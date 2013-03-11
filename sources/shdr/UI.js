@@ -40,6 +40,16 @@
       return $('#main-loader div').text('WebGL support missing.');
     };
 
+    UI.prototype.clearName = function(defaultName) {
+      var menuname;
+      this.inputs.savename.val(defaultName);
+      menuname = $('#menu-name');
+      if (menuname.is(':visible')) {
+        menuname.fadeOut(200);
+        return $('#menu-remove').fadeOut(200);
+      }
+    };
+
     UI.prototype.resetLoadFiles = function() {
       var d, tpl, _i, _len, _ref;
       tpl = "";
@@ -319,6 +329,7 @@
       menuname = $('#menu-name');
       if (!menuname.is(':visible')) {
         menuname.fadeIn(200);
+        $('#menu-remove').fadeIn(200);
         this.inputs.savename.val('Untitled');
         return this.setStatus('Please enter a file name, then hit the save button once again.', UI.INFO);
       } else {
@@ -327,18 +338,28 @@
     };
 
     UI.prototype.loadAction = function(index) {
-      return this.app.load(index);
+      var exists, menuname;
+      exists = this.app.load(index);
+      console.log(exists);
+      if (exists) {
+        this.inputs.savename.val(index);
+        menuname = $('#menu-name');
+        if (!menuname.is(':visible')) {
+          menuname.fadeIn(200);
+          return $('#menu-remove').fadeIn(200);
+        }
+      }
     };
 
     UI.prototype.newAction = function(confirm) {
-      var menuname;
       if (confirm === "confirm") {
-        this.app["new"]();
-        this.inputs.savename.val('Untitled');
-        menuname = $('#menu-name');
-        if (menuname.is(':visible')) {
-          return menuname.fadeOut(200);
-        }
+        return this.app["new"]();
+      }
+    };
+
+    UI.prototype.removeAction = function(confirm) {
+      if (confirm === "confirm") {
+        return this.app.remove(this.inputs.savename.val(), true);
       }
     };
 

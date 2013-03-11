@@ -27,6 +27,13 @@ class UI
   displayWebGLError: ->
     $('#main-loader div').text('WebGL support missing.')
 
+  clearName: (defaultName) ->
+    @inputs.savename.val(defaultName)
+    menuname = $('#menu-name')
+    if menuname.is(':visible')
+      menuname.fadeOut(200)
+      $('#menu-remove').fadeOut(200)
+
   resetLoadFiles: ->
     tpl = ""
     for d in shdr.Storage.listDocuments()
@@ -224,21 +231,29 @@ class UI
     menuname = $('#menu-name')
     if not menuname.is(':visible')
       menuname.fadeIn(200)
+      $('#menu-remove').fadeIn(200)
       @inputs.savename.val('Untitled')
       @setStatus('Please enter a file name, then hit the save button once again.', UI.INFO)
     else
       @app.save(@inputs.savename.val())
 
   loadAction: (index) ->
-    @app.load(index)
+    exists = @app.load(index)
+    console.log exists
+    if exists
+      @inputs.savename.val(index)
+      menuname = $('#menu-name')
+      if not menuname.is(':visible')
+        menuname.fadeIn(200)
+        $('#menu-remove').fadeIn(200)
 
   newAction: (confirm) ->
     if confirm is "confirm"
       @app.new()
-      @inputs.savename.val('Untitled')
-      menuname = $('#menu-name')
-      if menuname.is(':visible')
-       menuname.fadeOut(200)
+
+  removeAction: (confirm) ->
+    if confirm is "confirm"
+      @app.remove(@inputs.savename.val(), true)
 
 @shdr ||= {}
 @shdr.UI = UI
