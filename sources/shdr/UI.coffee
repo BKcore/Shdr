@@ -37,7 +37,7 @@ class UI
   resetLoadFiles: ->
     tpl = ""
     for d in shdr.Storage.listDocuments()
-      tpl += "<button type='button' class='menu-item' data-index='#{d}'>#{d}</button>\n"      
+      tpl += "<button type='button' class='menu-item' data-index='#{d}'>#{d}</button>\n"
     @lists.files.html(tpl)
 
   initStatus: ->

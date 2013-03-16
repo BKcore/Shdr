@@ -34,6 +34,8 @@ class App
       @baseurl = url.substr(0, hash)
     else
       @baseurl = url
+    if @baseurl.substr(0, 6) is "chrome"
+      @baseurl = "http://shdr.bkcore.com/"
 
   initViewer: (domCanvas) ->
     try

@@ -23,6 +23,32 @@
 
 <!-- app structure -->
 <div id="panel-top">
+  <div class="menu" id="menu-new" data-action="new">
+    <button type="button" class="menu-trigger  menu-icon-only"><i class="icon-file"></i></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
+      <button type="button" class="menu-item" data-index="cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-load" data-action="load">
+    <button type="button" class="menu-trigger menu-icon-only"><i class="icon-folder-open-alt"></i></button>
+    <div class="menu-list"></div>
+  </div>
+  <div class="menu" id="menu-save" data-action="save">
+    <button type="button" class="menu-button  menu-icon-only"><i class="icon-save"></i></button>
+  </div>
+  <div class="menu" id="menu-name" data-action="name">
+    <div class="menu-blank">
+      <input type="text" value="Untitled" id="save-name">
+    </div>
+  </div>
+  <div class="menu" id="menu-remove" data-action="remove">
+    <button type="button" class="menu-trigger menu-icon-only"><i class="icon-trash"></i></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
+      <button type="button" class="menu-item" data-index="cancel">Cancel</button>
+    </div>
+  </div>
   <div class="menu" id="menu-mode" data-action="mode">
     <button type="button" class="menu-trigger"><i class="icon-pencil"></i><span>Fragment</span></button>
     <div class="menu-list">
@@ -54,7 +80,7 @@
     <div class="menu-list"></div>
   </div>
   <div class="menu menu-right" id="menu-rotate" data-action="rotate">
-    <button type="button" class="menu-button menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
+    <button type="button" class="menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
       <i class="icon-pause" data-on="icon-pause" data-off="icon-play"></i>
     </button>
   </div>
@@ -105,7 +131,7 @@
     </p>
     <p>
       <b>Author:</b> <a href="bkcore.com" target="_blank">Thibaut Despoulain</a>
-      <br><b>Version:</b> 0.1.130228
+      <br><b>Version:</b> 0.1.130311
     </p>
     <p>
       Inspired by MrDoob's live HTML editor.

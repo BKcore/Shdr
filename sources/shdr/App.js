@@ -51,9 +51,12 @@
       url = window.location.href;
       hash = url.indexOf('#');
       if (hash > 0) {
-        return this.baseurl = url.substr(0, hash);
+        this.baseurl = url.substr(0, hash);
       } else {
-        return this.baseurl = url;
+        this.baseurl = url;
+      }
+      if (this.baseurl.substr(0, 6) === "chrome") {
+        return this.baseurl = "http://shdr.bkcore.com/";
       }
     };
 
