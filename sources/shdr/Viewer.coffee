@@ -5,7 +5,7 @@ class Viewer
 
   constructor: (@dom, @app) ->
     @time = 0.0
-    @rotate = true
+    @rotate = false
     @currentModel = null
     @rotateRate = 0.005
     @renderer = new THREE.WebGLRenderer(antialias: on)
