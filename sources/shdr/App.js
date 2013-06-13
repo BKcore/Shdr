@@ -243,7 +243,7 @@
     App.prototype.download = function() {
       var blob, e, url, win;
       try {
-        blob = new Blob([this.editor.getSession().getValue()], {
+        blob = new Blob(["#ifdef VS \n \n" + this.documents[App.VERTEX] + "\n \n#else \n \n" + this.documents[App.FRAGMENT] + "\n \n#endif"], {
           type: 'text/plain'
         });
         url = URL.createObjectURL(blob);
@@ -329,9 +329,7 @@
     };
 
     App.prototype.onEditorKeyDown = function(e) {
-      if (this.conf.update !== App.UPDATE_MANUAL) {
-        return true;
-      }
+      console.error("oneditorkeydown " + e.keyCode);
       if (e.ctrlKey && e.keyCode === 83) {
         this.updateShader();
         e.cancelBubble = true;
@@ -341,6 +339,17 @@
         }
         if (typeof e.preventDefault === "function") {
           e.preventDefault();
+        }
+        return false;
+      } else if (e.ctrlKey && e.keyCode === 32) {
+        console.error("auto completion");
+        return false;
+      } else if (e.ctrlKey && e.altKey) {
+        console.error("Flip");
+        if (this.conf.mode === App.FRAGMENT) {
+          this.setMode(App.VERTEX, true);
+        } else {
+          this.setMode(App.FRAGMENT, true);
         }
         return false;
       } else {

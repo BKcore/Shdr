@@ -188,9 +188,8 @@ class App
 
   download: ->
     try
-      blob = new Blob([@editor.getSession().getValue()],
-        type: 'text/plain'
-      )
+      blob = new Blob(["#ifdef VS \n \n" + @documents[App.VERTEX] + "\n \n#else \n \n" + @documents[App.FRAGMENT] + "\n \n#endif"],
+        type: 'text/plain')
       url = URL.createObjectURL(blob)
       win = window.open(url, '_blank')
       if win
@@ -258,7 +257,8 @@ class App
     true
 
   onEditorKeyDown: (e) ->
-    return true if @conf.update isnt App.UPDATE_MANUAL
+      #return true if @conf.update isnt App.UPDATE_MANUAL
+    console.error("oneditorkeydown " + e.keyCode);
     if e.ctrlKey and e.keyCode is 83
       @updateShader()
       e.cancelBubble = true
@@ -266,6 +266,16 @@ class App
       e.stopPropagation?()
       e.preventDefault?()
       false
+    else if e.ctrlKey and e.keyCode is 32 # Snippet auto completion
+        console.error("auto completion")
+        false
+    else if e.ctrlKey and e.altKey # Flip Shader
+        console.error("Flip")
+        if @conf.mode is App.FRAGMENT
+            @setMode(App.VERTEX,true)
+        else
+            @setMode(App.FRAGMENT,true)
+        false
     else
       true
 
