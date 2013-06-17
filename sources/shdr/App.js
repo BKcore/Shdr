@@ -329,7 +329,6 @@
     };
 
     App.prototype.onEditorKeyDown = function(e) {
-      console.error("oneditorkeydown " + e.keyCode);
       if (e.ctrlKey && e.keyCode === 83) {
         this.updateShader();
         e.cancelBubble = true;
@@ -345,11 +344,12 @@
         console.error("auto completion");
         return false;
       } else if (e.ctrlKey && e.altKey) {
-        console.error("Flip");
         if (this.conf.mode === App.FRAGMENT) {
           this.setMode(App.VERTEX, true);
+          this.ui.setMenuMode(App.VERTEX);
         } else {
           this.setMode(App.FRAGMENT, true);
+          this.ui.setMenuMode(App.FRAGMENT);
         }
         return false;
       } else {

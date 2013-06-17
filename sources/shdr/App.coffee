@@ -258,7 +258,7 @@ class App
 
   onEditorKeyDown: (e) ->
       #return true if @conf.update isnt App.UPDATE_MANUAL
-    console.error("oneditorkeydown " + e.keyCode);
+      #console.error("oneditorkeydown " + e.keyCode);
     if e.ctrlKey and e.keyCode is 83
       @updateShader()
       e.cancelBubble = true
@@ -270,11 +270,12 @@ class App
         console.error("auto completion")
         false
     else if e.ctrlKey and e.altKey # Flip Shader
-        console.error("Flip")
         if @conf.mode is App.FRAGMENT
             @setMode(App.VERTEX,true)
+            @ui.setMenuMode(App.VERTEX)
         else
             @setMode(App.FRAGMENT,true)
+            @ui.setMenuMode(App.FRAGMENT)
         false
     else
       true
