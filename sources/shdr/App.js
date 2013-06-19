@@ -293,7 +293,20 @@
       };
       this.initDocuments(obj);
       this.ui.setStatus('Editor reset using default shaders.', shdr.UI.SUCCESS);
-      return this.ui.clearName('Untitled');
+      this.ui.clearName('Untitled');
+      return this.viewer.loadModel('models/suzanne_high.js');
+    };
+
+    App.prototype.newDemo = function() {
+      var obj;
+      obj = {
+        documents: [shdr.Snippets.DemoFragment, shdr.Snippets.DemoVertex],
+        name: 'Untitled'
+      };
+      this.initDocuments(obj);
+      this.ui.setStatus('Editor reset using default shaders.', shdr.UI.SUCCESS);
+      this.ui.clearName('Untitled');
+      return this.viewer.loadModel('models/quad.js');
     };
 
     App.prototype.remove = function(name, reset) {

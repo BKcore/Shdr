@@ -28,6 +28,9 @@ class Viewer
     @model.rotation.y += @rotateRate if @model and @rotate
     @renderer.render(@scene, @camera)
 
+  reset: ->
+    @model.rotation.y = 0
+
   onResize: ->
     if @camera
       @camera.aspect = @dom.clientWidth/@dom.clientHeight

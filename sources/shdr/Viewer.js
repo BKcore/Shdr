@@ -43,6 +43,10 @@
       return this.renderer.render(this.scene, this.camera);
     };
 
+    Viewer.prototype.reset = function() {
+      return this.model.rotation.y = 0;
+    };
+
     Viewer.prototype.onResize = function() {
       if (this.camera) {
         this.camera.aspect = this.dom.clientWidth / this.dom.clientHeight;

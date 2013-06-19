@@ -42,10 +42,14 @@ Snippets =
     '}' 
   ].join('\n')
 
-  'DemoFrag': [
+  'DemoFragment': [
     'precision highp float;'
+    ''
     'uniform float time;'
     'uniform vec2 resolution;'
+    ''
+    'uniform mat4 modelViewMatrix;'
+    'uniform mat4 projectionMatrix;'
     ''
     'void main()'
     '{'

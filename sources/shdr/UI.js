@@ -297,6 +297,10 @@
       return this.app.viewer.rotate = state;
     };
 
+    UI.prototype.resetAction = function() {
+      return this.app.viewer.reset();
+    };
+
     UI.prototype.shareAction = function() {
       var url;
       this.app.updateDocument();
@@ -351,8 +355,10 @@
     };
 
     UI.prototype.newAction = function(confirm) {
-      if (confirm === "confirm") {
+      if (confirm === "default") {
         return this.app["new"]();
+      } else if (confirm === "demo") {
+        return this.app.newDemo();
       }
     };
 

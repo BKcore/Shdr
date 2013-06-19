@@ -234,6 +234,20 @@ class App
     @ui.setStatus('Editor reset using default shaders.',
       shdr.UI.SUCCESS)
     @ui.clearName('Untitled')
+    @viewer.loadModel('models/suzanne_high.js')
+
+  newDemo: ->
+    obj =
+      documents: [
+        shdr.Snippets.DemoFragment
+        shdr.Snippets.DemoVertex
+      ]
+      name: 'Untitled'
+    @initDocuments(obj)
+    @ui.setStatus('Editor reset using default shaders.',
+      shdr.UI.SUCCESS)
+    @ui.clearName('Untitled')
+    @viewer.loadModel('models/quad.js')
 
   remove: (name, reset=false) ->
     removed = shdr.Storage.removeDocument(name)
