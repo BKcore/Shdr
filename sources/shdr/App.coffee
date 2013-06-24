@@ -234,7 +234,7 @@ class App
     @ui.setStatus('Editor reset using default shaders.',
       shdr.UI.SUCCESS)
     @ui.clearName('Untitled')
-    @viewer.loadModel('models/suzanne_high.js')
+    loadModel('models/suzanne_high.js')
 
   newDemo: ->
     obj =
@@ -271,8 +271,6 @@ class App
     true
 
   onEditorKeyDown: (e) ->
-      #return true if @conf.update isnt App.UPDATE_MANUAL
-      #console.error("oneditorkeydown " + e.keyCode);
     if e.ctrlKey and e.keyCode is 83
       @updateShader()
       e.cancelBubble = true
@@ -280,9 +278,6 @@ class App
       e.stopPropagation?()
       e.preventDefault?()
       false
-    else if e.ctrlKey and e.keyCode is 32 # Snippet auto completion
-        console.error("auto completion")
-        false
     else if e.ctrlKey and e.altKey # Flip Shader
         if @conf.mode is App.FRAGMENT
             @setMode(App.VERTEX,true)
@@ -290,7 +285,11 @@ class App
         else
             @setMode(App.FRAGMENT,true)
             @ui.setMenuMode(App.FRAGMENT)
-        false
+      e.cancelBubble = true
+      e.returnValue = false
+      e.stopPropagation?()
+      e.preventDefault?()
+      false
     else
       true
 
