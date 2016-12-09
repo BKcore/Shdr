@@ -2,6 +2,7 @@ class Viewer
 
   @FRAGMENT: 0
   @VERTEX: 1
+  @UNIFORMS: 2
 
   constructor: (@dom, @app) ->
     @time = 0.0
@@ -65,19 +66,33 @@ class Viewer
     if mode is Viewer.FRAGMENT
       @fs = shader
       @material.fragmentShader = shader
+    else if mode is Viewer.UNIFORMS
+      # shader is object to be merged in
+      @resetUniforms()
+      @addCustomUniforms(shader)
+      @material.uniforms = @uniforms
     else
       @vs = shader
       @material.vertexShader = shader
     @material.needsUpdate = true
 
-  defaultMaterial: ->
+  resetUniforms: ->
     @uniforms =
       time:
         type: 'f'
-        value: 0.0
+        value: @time
       resolution:
         type: 'v2'
         value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)
+
+  addCustomUniforms: (uniformsObj) ->
+    for key,value of uniformsObj
+      if (uniformsObj.hasOwnProperty(key))
+        @uniforms[key] = value
+
+  defaultMaterial: ->
+    @resetUniforms()
+    @addCustomUniforms(eval("({" + shdr.Snippets.DefaultUniforms + "});")
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
     return new THREE.ShaderMaterial(

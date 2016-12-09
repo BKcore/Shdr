@@ -5,12 +5,13 @@ class App
   @UPDATE_MANUAL: 2
   @FRAGMENT: 0
   @VERTEX: 1
+  @UNIFORMS: 2
 
   constructor: (domEditor, domCanvas, conf={}) ->
     # CUSTOM THREE.JS HACK
     window.THREE_SHADER_OVERRIDE = true
     @initBaseurl()
-    @documents = ['', '']
+    @documents = ['', '', '']
     @marker = null
     @viewer = null
     @validator = null
@@ -55,6 +56,7 @@ class App
   initEditor: (domEditor) ->
     @documents[App.FRAGMENT] = @viewer.fs
     @documents[App.VERTEX] = @viewer.vs
+    @documents[App.UNIFORMS] = shdr.Snippets.DefaultUniforms
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
     @editor.setShowPrintMargin(off)
@@ -77,6 +79,15 @@ class App
     session.removeMarker(@marker.id) if @marker?
     if @conf.mode is App.FRAGMENT
       type = shdr.Validator.FRAGMENT
+    else if @conf.mode is App.UNIFORMS
+      try
+        newUniforms = eval("({" + session.getValue() + "});")
+        @viewer.updateShader(newUniforms, App.UNIFORMS)
+      catch e
+        # TODO show an error on the UI here
+        console.log("uniform compilation failed")
+        console.log(e)
+      return
     else
       type = shdr.Validator.VERTEX
     src = session.getValue()
@@ -101,12 +112,15 @@ class App
     @initDocuments(obj)
 
   initDocuments: (obj) ->
-    if obj and obj.documents and obj.documents.length is 2
+    if obj and obj.documents
       @documents = obj.documents
       fs = @documents[App.FRAGMENT]
       vs = @documents[App.VERTEX]
+      uniforms = @documents[App.UNIFORMS]
       [_fs, fl, fm] = @validator.validate(fs, shdr.Validator.FRAGMENT)
       [_vs, vl, vm] = @validator.validate(vs, shdr.Validator.VERTEX)
+      # TODO validate uniforms
+      @viewer.updateShader(uniforms, App.UNIFORMS)
       if _fs and _vs
         @viewer.updateShader(vs, App.VERTEX)
         @viewer.updateShader(fs, App.FRAGMENT)
@@ -241,6 +255,7 @@ class App
       documents: [
         shdr.Snippets.DefaultFragment
         shdr.Snippets.DefaultVertex
+        shdr.Snippets.DefaultUniforms
       ]
       name: 'Untitled'
     @initDocuments(obj)
@@ -323,6 +338,9 @@ class App
       when App.VERTEX
         @documents[old] = session.getValue() if not force
         session.setValue(@documents[App.VERTEX])
+      when App.UNIFORMS
+        @documents[old] = session.getValue() if not force
+        session.setValue(@documents[App.UNIFORMS])
     @updateShader()
     this
 

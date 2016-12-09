@@ -25,10 +25,19 @@ Snippets =
     'uniform vec2 resolution;'
     'varying vec3 fPosition;'
     'varying vec3 fNormal;'
+    'uniform vec3 testColor;'
     ''
     'void main()'
     '{'
-    '  gl_FragColor = vec4(fNormal, 1.0);'
+    '  gl_FragColor = vec4(testColor, 1.0);'
+    '}'
+  ].join('\n')
+
+  # TODO add link to three.js uniform spec?
+  'DefaultUniforms': [
+    'testColor: {'
+    '  type: "v3",'
+    '  value: new THREE.Vector3(0.0, 0.0, 1.0)'
     '}'
   ].join('\n')
 
