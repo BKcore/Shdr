@@ -81,7 +81,7 @@ class App
       type = shdr.Validator.FRAGMENT
     else if @conf.mode is App.UNIFORMS
       try
-        newUniforms = eval("({" + session.getValue() + "});")
+        newUniforms = session.getValue()
         @viewer.updateShader(newUniforms, App.UNIFORMS)
       catch e
         # TODO show an error on the UI here

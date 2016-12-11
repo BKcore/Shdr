@@ -35,10 +35,7 @@ Snippets =
 
   # TODO add link to three.js uniform spec?
   'DefaultUniforms': [
-    'testColor: {'
-    '  type: "v3",'
-    '  value: new THREE.Vector3(0.0, 0.0, 1.0)'
-    '}'
+    'vec3 testColor = vec3(0.0, 0.0, 1.0);'
   ].join('\n')
 
   'DemoVertex': [
