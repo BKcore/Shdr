@@ -61,8 +61,8 @@ class UI
     objfile = @boxes.upload.find('#box-upload-input')
     submitbutton = @boxes.upload.find('#box-upload-submit')
     submitbutton.on 'click', (e) =>
-       input_file = objfile[0].files[0]
-       @app.upload input_file
+       inputFile = objfile[0].files[0]
+       @app.upload(inputFile)
        @boxes.upload.fadeOut(200)
     shareurl = @boxes.share.find('#box-share-url')
     shortenurl = @boxes.share.find('#box-share-shorten')
@@ -114,7 +114,6 @@ class UI
     button = $('<button>').addClass('menu-item')
     list.append(button.clone().text(modelName)
     .attr('data-index', key))
-    no
 
   setStatus: (message, type=UI.ERROR) ->
     @status.span.removeClass()
