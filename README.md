@@ -27,3 +27,16 @@ If you want to test the prod version or the chrome app:
 cd build
 node build.js [--output=../source/build/shdr.js] [--minify] [--chromeapp] [--persist]
 ```
+
+# Building and Running with npm
+To install node and npm on Ubuntu:
+```
+sudo apt-get install nodejs npm
+sudo ln -s /usr/bin/nodejs /usr/local/bin/node
+```
+To build and run with npm:
+```
+cd build
+npm install
+npm start
+```
