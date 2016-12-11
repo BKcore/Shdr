@@ -53,10 +53,17 @@ class UI
 
   initBoxes: ->
     @boxes =
+      upload: $('#box-upload')
       share: $('#box-share')
       about: $('#box-about')
     $('.box .close').on 'click', (e) ->
       $(this).parent().fadeOut(200)
+    objfile = @boxes.upload.find('#box-upload-input')
+    submitbutton = @boxes.upload.find('#box-upload-submit')
+    submitbutton.on 'click', (e) =>
+       input_file = objfile[0].files[0]
+       @app.upload input_file
+       @boxes.upload.fadeOut(200)
     shareurl = @boxes.share.find('#box-share-url')
     shortenurl = @boxes.share.find('#box-share-shorten')
     shareurl.on 'click', (e) ->
@@ -100,6 +107,13 @@ class UI
     for key, model of shdr.Models
       list.append(button.clone().text(model.name)
       .attr('data-index', key))
+    no
+
+  addNewModel: (modelName, key) ->
+    list = $('#menu-models .menu-list')
+    button = $('<button>').addClass('menu-item')
+    list.append(button.clone().text(modelName)
+    .attr('data-index', key))
     no
 
   setStatus: (message, type=UI.ERROR) ->
@@ -214,6 +228,11 @@ class UI
     url = @app.packURL()
     @boxes.share.find('#box-share-url').val(url)
     @boxes.share.fadeIn(200)
+
+  uploadAction: ->
+    @app.updateDocument()
+    boxupload = $('#box-upload')
+    @boxes.upload.fadeIn(200)
 
   downloadAction: ->
     @app.download()

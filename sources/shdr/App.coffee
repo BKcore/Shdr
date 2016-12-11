@@ -186,6 +186,18 @@ class App
             shdr.UI.WARNING)
         console.warn 'ERROR: ', e
 
+  upload: (file_obj) ->
+    try
+      reader = new FileReader()
+      reader.readAsDataURL file_obj
+      reader.onload = (e) =>
+        model = {name: file_obj.name, data: e.target.result}
+        shdr.Models[e.target.result] = model
+        @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
+        @ui.addNewModel(file_obj.name, e.target.result)
+     catch e
+       @ui.setStatus('You must select a .js model to upload.', shdr.UI.WARNING)
+
   download: ->
     try
       blob = new Blob(["#ifdef VS \n \n" + @documents[App.VERTEX] + "\n \n#else \n \n" + @documents[App.FRAGMENT] + "\n \n#endif"],
