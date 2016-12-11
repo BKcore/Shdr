@@ -138,8 +138,8 @@ function main() {
 		}
 
 		var temp = buffer.join('');
-      recrmdirSync(getDirName(output));
-      fs.mkdirSync(getDirName(output));
+		recrmdirSync(getDirName(output));
+		fs.mkdirSync(getDirName(output));
 		fs.writeFileSync(output, minlibs+temp, 'utf8');
 	}
 	else
