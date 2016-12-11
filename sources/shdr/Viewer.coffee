@@ -92,7 +92,7 @@ class Viewer
 
   defaultMaterial: ->
     @resetUniforms()
-    @addCustomUniforms(eval("({" + shdr.Snippets.DefaultUniforms + "});")
+    @addCustomUniforms(eval("({" + shdr.Snippets.DefaultUniforms + "});"))
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
     return new THREE.ShaderMaterial(
