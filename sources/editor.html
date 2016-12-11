@@ -68,6 +68,9 @@
   <div class="menu" id="menu-download" data-action="download">
     <button type="button" class="menu-button"><i class="icon-download-alt"></i>Download</button>
   </div>
+  <div class="menu" id="menu-upload" data-action="upload">
+    <button type="button" class="menu-button"><i class="icon-upload-alt"></i>Upload Model</button>
+  </div>
   <div class="menu" id="menu-share" data-action="share">
     <button type="button" class="menu-button"><i class="icon-share-alt"></i>Share</button>
   </div>
@@ -108,6 +111,15 @@
       <button type="button" class="menu-button"><i class="icon-question-sign"></i>Help</button>
     </div>
   </div>
+</div>
+
+<div id="box-upload" class="box">
+  <h1 class="title">Upload .obj File</h1>
+  <input type="file" name="object" id='box-upload-input' accept='.js'>
+  <input type="submit" id='box-upload-submit'>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
 </div>
 
 <div id="box-share" class="box">

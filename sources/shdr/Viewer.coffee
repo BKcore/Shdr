@@ -69,7 +69,7 @@ class Viewer
 
   defaultMaterial: ->
     @uniforms =
-      time: 
+      time:
         type: 'f'
         value: 0.0
       resolution:
