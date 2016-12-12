@@ -16,7 +16,7 @@ Issues, feature requests, contributions:
 # Run
 To test locally you don't need to build anything. The build step is only there for production and the chrome app.
 ```
-cd source
+cd sources
 python -m SimpleHTTPServer
 chrome editor.html
 ```
