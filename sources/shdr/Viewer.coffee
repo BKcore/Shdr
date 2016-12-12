@@ -114,23 +114,22 @@ class Viewer
       else if type == 'vec2'
         vectorVals = value.slice(5, value.length - 1).split(',').map(
           parseFloat)
-
         uniform['type'] = 'v2'
         uniform['value'] = new THREE.Vector2(vectorVals[0], vectorVals[1])
       else if type == 'vec3'
         vectorVals = value.slice(5, value.length - 1).split(',').map(
           parseFloat)
-
         uniform['type'] = 'v3'
         uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
           vectorVals[2])
       else if type == 'vec4'
         vectorVals = value[4:-1].split(', ').map(parseFloat)
-
         uniform['type'] = 'v4'
         uniform['value'] = new THREE.Vector4(vectorVals[0], vectorVals[1],
           vectorVals[2], vectorVals[3])
-
+      else if type =='sampler2D'
+        uniform['type'] = 't'
+        uniform['value'] = new THREE.TextureLoader().load(value)
       uniformObj[name] = uniform
 
     return uniformObj
