@@ -186,15 +186,16 @@ class App
             shdr.UI.WARNING)
         console.warn 'ERROR: ', e
 
-  upload: (file_obj) ->
+  upload: (fileObj) ->
     try
+      @ui.setStatus('Uploading...', shdr.UI.WARNING)
       reader = new FileReader()
-      reader.readAsDataURL file_obj
+      reader.readAsDataURL fileObj
       reader.onload = (e) =>
-        model = {name: file_obj.name, data: e.target.result}
+        model = {name: fileObj.name, data: e.target.result}
         shdr.Models[e.target.result] = model
         @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
-        @ui.addNewModel(file_obj.name, e.target.result)
+        @ui.addNewModel(fileObj.name, e.target.result)
      catch e
        @ui.setStatus('You must select a .js model to upload.', shdr.UI.WARNING)
 
