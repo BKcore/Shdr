@@ -5,7 +5,7 @@ class Viewer
 
   constructor: (@dom, @app) ->
     @time = 0.0
-    @rotate = true
+    @rotate = false
     @currentModel = null
     @rotateRate = 0.005
     @renderer = new THREE.WebGLRenderer(antialias: on)
@@ -27,6 +27,9 @@ class Viewer
     @uniforms.time.value = @time
     @model.rotation.y += @rotateRate if @model and @rotate
     @renderer.render(@scene, @camera)
+
+  reset: ->
+    @model.rotation.y = 0
 
   onResize: ->
     if @camera

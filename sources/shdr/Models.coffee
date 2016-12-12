@@ -3,6 +3,10 @@ Models =
   'models/cube.js':
     name: 'Cube'
 
+
+  'models/quad.js':
+    name: 'Quad'
+
   'models/sphere.js':
     name: 'Sphere'
 

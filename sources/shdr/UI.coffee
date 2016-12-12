@@ -220,6 +220,9 @@ class UI
   rotateAction: (state) ->
     @app.viewer.rotate = state
 
+  resetAction: ->
+    @app.viewer.reset()
+
   shareAction: ->
     @app.updateDocument()
     url = @app.packURL()
@@ -267,9 +270,12 @@ class UI
         $('#menu-remove').fadeIn(200)
 
   newAction: (confirm) ->
-    if confirm is "confirm"
+    if confirm is "default"
       @app.new()
+    else if confirm is "demo"
+      @app.newDemo()
 
+  
   removeAction: (confirm) ->
     if confirm is "confirm"
       @app.remove(@inputs.savename.val(), true)

@@ -6,9 +6,9 @@ var execSync = require('child_process').execSync;
 var spawn = require('child_process').spawn;
 var getDirName = require('path').dirname;
 
-var root = "../";
+var root = "./";
 var base = root+"sources/";
-var coffeedir = base+"shdr/";
+var coffeedir = base+"shdr";
 var minifiedlibs = [
 	base+"libs/ace/ace.js",
 	base+"libs/ace/mode-glsl.js",
@@ -138,8 +138,8 @@ function main() {
 		}
 
 		var temp = buffer.join('');
-      recrmdirSync(getDirName(output));
-      fs.mkdirSync(getDirName(output));
+		recrmdirSync(getDirName(output));
+		fs.mkdirSync(getDirName(output));
 		fs.writeFileSync(output, minlibs+temp, 'utf8');
 	}
 	else
