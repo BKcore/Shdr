@@ -186,11 +186,23 @@ class App
             shdr.UI.WARNING)
         console.warn 'ERROR: ', e
 
+  upload: (fileObj) ->
+    try
+      @ui.setStatus('Uploading...', shdr.UI.WARNING)
+      reader = new FileReader()
+      reader.readAsDataURL fileObj
+      reader.onload = (e) =>
+        model = {name: fileObj.name, data: e.target.result}
+        shdr.Models[e.target.result] = model
+        @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
+        @ui.addNewModel(fileObj.name, e.target.result)
+     catch e
+       @ui.setStatus('You must select a .js model to upload.', shdr.UI.WARNING)
+
   download: ->
     try
-      blob = new Blob([@editor.getSession().getValue()],
-        type: 'text/plain'
-      )
+      blob = new Blob(["#ifdef VS \n \n" + @documents[App.VERTEX] + "\n \n#else \n \n" + @documents[App.FRAGMENT] + "\n \n#endif"],
+        type: 'text/plain')
       url = URL.createObjectURL(blob)
       win = window.open(url, '_blank')
       if win
@@ -235,6 +247,20 @@ class App
     @ui.setStatus('Editor reset using default shaders.',
       shdr.UI.SUCCESS)
     @ui.clearName('Untitled')
+    loadModel('models/suzanne_high.js')
+
+  newDemo: ->
+    obj =
+      documents: [
+        shdr.Snippets.DemoFragment
+        shdr.Snippets.DemoVertex
+      ]
+      name: 'Untitled'
+    @initDocuments(obj)
+    @ui.setStatus('Editor reset using default shaders.',
+      shdr.UI.SUCCESS)
+    @ui.clearName('Untitled')
+    @viewer.loadModel('models/quad.js')
 
   remove: (name, reset=false) ->
     removed = shdr.Storage.removeDocument(name)
@@ -258,9 +284,20 @@ class App
     true
 
   onEditorKeyDown: (e) ->
-    return true if @conf.update isnt App.UPDATE_MANUAL
     if e.ctrlKey and e.keyCode is 83
       @updateShader()
+      e.cancelBubble = true
+      e.returnValue = false
+      e.stopPropagation?()
+      e.preventDefault?()
+      false
+    else if e.ctrlKey and e.altKey # Flip Shader
+      if @conf.mode is App.FRAGMENT
+        @setMode(App.VERTEX,true)
+        @ui.setMenuMode(App.VERTEX)
+      else
+        @setMode(App.FRAGMENT,true)
+        @ui.setMenuMode(App.FRAGMENT)
       e.cancelBubble = true
       e.returnValue = false
       e.stopPropagation?()
