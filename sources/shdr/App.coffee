@@ -279,12 +279,12 @@ class App
       e.preventDefault?()
       false
     else if e.ctrlKey and e.altKey # Flip Shader
-        if @conf.mode is App.FRAGMENT
-            @setMode(App.VERTEX,true)
-            @ui.setMenuMode(App.VERTEX)
-        else
-            @setMode(App.FRAGMENT,true)
-            @ui.setMenuMode(App.FRAGMENT)
+      if @conf.mode is App.FRAGMENT
+        @setMode(App.VERTEX,true)
+        @ui.setMenuMode(App.VERTEX)
+      else
+        @setMode(App.FRAGMENT,true)
+        @ui.setMenuMode(App.FRAGMENT)
       e.cancelBubble = true
       e.returnValue = false
       e.stopPropagation?()
