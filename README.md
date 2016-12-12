@@ -4,7 +4,7 @@ Shdr
 Shdr is an online ESSL (GLSL) shader editor, viewer and validator powered by WebGL.
 
 > **Author:** [Thibaut Despoulain (BKcore)](http://bkcore.com)
-> **Version:** 0.1.130224
+> **Version:** 0.2.161211
 
 Inspired by MrDoob's live HTML editor.
 Powered by Three.js, Ace.js, RawDeflate.js and jQuery.
