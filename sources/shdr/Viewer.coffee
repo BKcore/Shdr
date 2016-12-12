@@ -106,8 +106,17 @@ class Viewer
         uniform['type'] = 'f'
         uniform['value'] = parseFloat(value)
       else if type == 'int'
-        uniforms['type'] = 'i'
+        uniform['type'] = 'i'
         uniform['value'] = parseInt(value)
+      else if type == 'bool'
+        uniform['type'] = 'i'
+        uniform['value'] = value == 'true' ? 1 : 0
+      else if type == 'vec2'
+        vectorVals = value.slice(5, value.length - 1).split(',').map(
+          parseFloat)
+
+        uniform['type'] = 'v2'
+        uniform['value'] = new THREE.Vector2(vectorVals[0], vectorVals[1])
       else if type == 'vec3'
         vectorVals = value.slice(5, value.length - 1).split(',').map(
           parseFloat)
