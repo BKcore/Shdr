@@ -2,6 +2,7 @@ class Viewer
 
   @FRAGMENT: 0
   @VERTEX: 1
+  @UNIFORMS: 2
 
   constructor: (@dom, @app) ->
     @time = 0.0
@@ -65,19 +66,83 @@ class Viewer
     if mode is Viewer.FRAGMENT
       @fs = shader
       @material.fragmentShader = shader
+    else if mode is Viewer.UNIFORMS
+      # shader is object to be merged in
+      @resetUniforms()
+      @addCustomUniforms(@parseUniforms(shader))
+      @material.uniforms = @uniforms
     else
       @vs = shader
       @material.vertexShader = shader
     @material.needsUpdate = true
 
-  defaultMaterial: ->
+  resetUniforms: ->
     @uniforms =
       time:
         type: 'f'
-        value: 0.0
+        value: @time
       resolution:
         type: 'v2'
         value: new THREE.Vector2(@dom.clientWidth, @dom.clientHeight)
+
+  # Parses lines of uniforms in the form 'type id = value;'
+  parseUniforms: (uniformStr) ->
+    toParse = uniformStr.split(';')
+    uniformObj = {}
+
+    for line in toParse
+      if (!line.length)
+        continue
+
+      tokens = line.trim().split(' ')
+      type = tokens[0]
+      name = tokens[1]
+      value = tokens.slice(3).join('')
+      
+      uniform = {}
+
+      # Get the type of the uniform
+      if type == 'float'
+        uniform['type'] = 'f'
+        uniform['value'] = parseFloat(value)
+      else if type == 'int'
+        uniform['type'] = 'i'
+        uniform['value'] = parseInt(value)
+      else if type == 'bool'
+        uniform['type'] = 'i'
+        uniform['value'] = value == 'true' ? 1 : 0
+      else if type == 'vec2'
+        vectorVals = value.slice(5, value.length - 1).split(',').map(
+          parseFloat)
+
+        uniform['type'] = 'v2'
+        uniform['value'] = new THREE.Vector2(vectorVals[0], vectorVals[1])
+      else if type == 'vec3'
+        vectorVals = value.slice(5, value.length - 1).split(',').map(
+          parseFloat)
+
+        uniform['type'] = 'v3'
+        uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
+          vectorVals[2])
+      else if type == 'vec4'
+        vectorVals = value[4:-1].split(', ').map(parseFloat)
+
+        uniform['type'] = 'v4'
+        uniform['value'] = new THREE.Vector4(vectorVals[0], vectorVals[1],
+          vectorVals[2], vectorVals[3])
+
+      uniformObj[name] = uniform
+
+    return uniformObj
+
+  addCustomUniforms: (uniformsObj) ->
+    for key,value of uniformsObj
+      if (uniformsObj.hasOwnProperty(key))
+        @uniforms[key] = value
+
+  defaultMaterial: ->
+    @resetUniforms()
+    @addCustomUniforms(@parseUniforms(shdr.Snippets.DefaultUniforms))
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
     return new THREE.ShaderMaterial(
