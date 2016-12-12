@@ -8,12 +8,12 @@ class Validator
     if not @canvas
       @canvas = document.createElement('Canvas')
     try
-      @context = canvas.getContext("webgl") or 
+      @context = @canvas.getContext("webgl") or
         @canvas.getContext("experimental-webgl")
     catch e
       console.log e
     if not @context
-      @available = false 
+      @available = false
       console.warn 'GLSL Validator: No WebGL context.'
     else
       Validator.FRAGMENT = @context.FRAGMENT_SHADER
@@ -36,7 +36,7 @@ class Validator
       @context.deleteShader(shader)
       lines = log.split('\n')
       for i in lines
-        error = i if i.substr(0, 5) is 'ERROR' 
+        error = i if i.substr(0, 5) is 'ERROR'
       if not error
         return [false, 0, 'Unable to parse error.']
       details = error.split(':')
@@ -45,6 +45,6 @@ class Validator
       line = details[2]
       message = details.splice(3).join(':')
       return [false, parseInt(line), message]
-    
+
 @shdr ||= {}
 @shdr.Validator = Validator
