@@ -114,10 +114,6 @@ class UI
     button = $('<button>').addClass('menu-item')
     list.append(button.clone().text(modelName)
     .attr('data-index', key))
-<<<<<<< HEAD
-    no
-=======
->>>>>>> custom-model-upload
 
   setStatus: (message, type=UI.ERROR) ->
     @status.span.removeClass()
