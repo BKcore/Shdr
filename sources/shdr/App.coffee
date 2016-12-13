@@ -209,7 +209,7 @@ class App
         texture = {name: textureObj.name, data: e.target.result}
         shdr.Textures[texture.name] = texture
         @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
-    catch e 
+    catch e
       @ui.setStatus('You must select a texture to upload.', shdr.UI.WARNING)
 
   upload: (fileObj) ->

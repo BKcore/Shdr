@@ -44,7 +44,7 @@ class Viewer
     @renderer.setSize(@dom.clientWidth, @dom.clientHeight)
 
   loadModel: (key) ->
-    @loader.load(key, (geo) => 
+    @loader.load(key, (geo) =>
       @initModel(geo, key)
     )
     @app.ui.showModelLoader()
@@ -93,27 +93,27 @@ class Viewer
 
     for line in toParse
       lineNum += 1
-      
+
       if (!line.trim().length)
         continue
 
       tokens = line.trim().split(' ')
-      
+
       if (!tokens.length)
         continue
 
       if (tokens.length < 4)
         console.log('invalid syntax at line ' + lineNum)
         continue
-      
+
       type = tokens[0]
       name = tokens[1]
       value = tokens.slice(3).join('')
-  
+
       if (tokens[2] != '=')
         console.log('invalid syntax at line ' + lineNum + ': expected =')
         continue
-  
+
       uniform = {}
 
       # Get the type of the uniform
