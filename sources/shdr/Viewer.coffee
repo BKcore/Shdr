@@ -120,6 +120,7 @@ class Viewer
         vectorVals = value.slice(5, value.length - 1).split(',').map(
           parseFloat)
         uniform['type'] = 'v3'
+        console.log(value)
         uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
           vectorVals[2])
       else if type == 'vec4'
@@ -129,7 +130,9 @@ class Viewer
           vectorVals[2], vectorVals[3])
       else if type =='sampler2D'
         uniform['type'] = 't'
-        uniform['value'] = new THREE.TextureLoader().load(value)
+        THREE.ImageUtils.crossOrigin = ''
+        console.log(value)
+        uniform['value'] = THREE.ImageUtils.loadTexture(value)
       uniformObj[name] = uniform
 
     return uniformObj
@@ -144,6 +147,7 @@ class Viewer
     @addCustomUniforms(@parseUniforms(shdr.Snippets.DefaultUniforms))
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
+    console.log(@uniforms)
     return new THREE.ShaderMaterial(
       uniforms: @uniforms
       vertexShader: @vs

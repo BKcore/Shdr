@@ -5,6 +5,9 @@
   <title>Shdr Editor</title>
   <meta name="description" content="Shdr is a live ESSL (GLSL) shader editor, viewer and validator powered by WebGL and built by Thibaut Despoulain (BKcore).">
   <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="9aMzbIqnVsSKifyPR9OdN8HoKfTbsE3W8lSQ9M66zwk">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="shortcut icon" href="/favicon.png" type="image/png">
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
@@ -23,8 +26,7 @@
   <div class="menu" id="menu-new" data-action="new">
     <button type="button" class="menu-trigger  menu-icon-only"><i class="icon-file"></i></button>
     <div class="menu-list">
-      <button type="button" class="menu-item" data-index="default">Default</button>
-      <button type="button" class="menu-item" data-index="demo">Demo</button>
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
       <button type="button" class="menu-item" data-index="cancel">Cancel</button>
     </div>
   </div>
@@ -52,6 +54,7 @@
     <div class="menu-list">
       <button type="button" class="menu-item" data-index="0">Fragment</button>
       <button type="button" class="menu-item" data-index="1">Vertex</button>
+      <button type="button" class="menu-item" data-index="2">Uniforms</button>
     </div>
   </div>
   <div class="menu" id="menu-update" data-action="update">
@@ -72,6 +75,9 @@
   <div class="menu" id="menu-upload" data-action="upload">
     <button type="button" class="menu-button"><i class="icon-upload-alt"></i>Upload Model</button>
   </div>
+  <div class="menu" id="menu-texture" data-action="texture">
+    <button type="button" class="menu-button"><i class="icon-upload-alt"></i>Upload Texture</button>
+  </div>
   <div class="menu" id="menu-share" data-action="share">
     <button type="button" class="menu-button"><i class="icon-share-alt"></i>Share</button>
   </div>
@@ -81,18 +87,15 @@
     <div class="menu-list"></div>
   </div>
   <div class="menu menu-right" id="menu-rotate" data-action="rotate">
-    <button type="button" class="menu-toggle menu-icon-only" data-current="1" data-off="1" data-on="0">
+    <button type="button" class="menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
       <i class="icon-play" data-on="icon-pause" data-off="icon-play"></i>
     </button>
-  </div>
-  <div class="menu menu-right" id="menu-reset" data-action="reset">
-     <button type="button" class="menu-toggle menu-icon-only"><i class="icon-fast-backward"></i></button>
   </div>
 </div>
 
 <div id="panel-main">
   <div id="panel-left">
-  	<div id="editor"></div>
+    <div id="editor"></div>
   </div>
   <div id="panel-right">
     <div id="viewer"></div>
@@ -118,9 +121,22 @@
 </div>
 
 <div id="box-upload" class="box">
-  <h1 class="title">Upload .obj File</h1>
-  <input type="file" name="object" id='box-upload-input' accept='.js'>
-  <input type="submit" id='box-upload-submit'>
+  <h1 class="title">Upload Model File</h1>
+  <div class="content">
+     <input type="file" name="object" id='box-upload-input' accept='.js'>
+     <button id="box-upload-submit" class="menu-button">Upload</button>
+  </div>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="box-texture" class="box">
+  <h1 class="title">Upload Texture File</h1>
+  <div class="content">
+     <input type="file" name="object" id='box-texture-input'>
+     <button id="box-texture-submit" class="menu-button">Upload</button>
+  </div>
   <button type="button" class="close">
     <i class="icon-remove"></i>
   </button>
@@ -165,23 +181,7 @@
 <div id="top-separator"></div>
 <div id="bottom-separator"></div>
 	
-<script src="libs/threejs/three.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/threejs/three.orbit.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/threejs/three.webglrenderer.custom.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/zip/rawdeflate.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/zip/rawinflate.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/jquery-1.8.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="shdr/Validator.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Storage.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/UI.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Snippets.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Models.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/Viewer.js" type="text/javascript" charset="utf-8"></script>
-<script src="shdr/App.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="shdr/Bootstrap.js" type="text/javascript" charset="utf-8"></script>
+<script src="build/shdr.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>

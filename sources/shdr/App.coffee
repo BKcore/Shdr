@@ -200,6 +200,18 @@ class App
             shdr.UI.WARNING)
         console.warn 'ERROR: ', e
 
+  texture: (textureObj) ->
+    try
+      @ui.setStatus('Uploading...', shdr.UI.WARNING)
+      reader = new FileReader()
+      reader.readAsDataURL textureObj
+      reader.onload = (e) =>
+        texture = {name: textureObj.name, data: e.target.result}
+        shdr.Texture[textureObj.name] = texture
+        @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
+    catch e 
+      @ui.setStatus('You must select a texture to upload.', shdr.UI.WARNING)
+
   upload: (fileObj) ->
     try
       @ui.setStatus('Uploading...', shdr.UI.WARNING)
