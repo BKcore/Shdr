@@ -13,7 +13,7 @@ class Viewer
     @canvas = @renderer.domElement
     @dom.appendChild(@canvas)
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 3000)
+    @camera = new THREE.PerspectiveCamera(35, @dom.clientWidth/@dom.clientHeight, 1, 100000)
     @controls = new THREE.OrbitControls(@camera, @dom)
     @scene.add(@camera)
     @loader = new THREE.JSONLoader()

@@ -120,7 +120,7 @@ class UI
   addNewModel: (modelName, key) ->
     list = $('#menu-models .menu-list')
     button = $('<button>').addClass('menu-item')
-    list.append(button.clone().text(modelName)
+    list.append(button.clone().text(modelName.charAt(0).toUpperCase() + modelName.split('.')[0].slice(1))
     .attr('data-index', key))
 
   setStatus: (message, type=UI.ERROR) ->
