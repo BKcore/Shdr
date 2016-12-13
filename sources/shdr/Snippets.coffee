@@ -49,7 +49,7 @@ Snippets =
     ''
     'void main()'
     '{'
-    '  vec4 color = texture2D(my_texture, vec2(fNormal.x, fNormal.y));'
+    '  vec4 color = texture2D(my_texture, vec2((0.4 * fNormal.x) + 0.6, (0.4 * fNormal.y) + 0.4));'
     '  gl_FragColor = vec4(color.x, color.y, color.z, 1.0);'
     '}'
   ].join('\n')
