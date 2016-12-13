@@ -133,7 +133,6 @@ class Viewer
         # Remove quotes from string
         value = value.replace(/^"(.*)"$/, '$1')
         value = value.replace(/^"(.*)"$/, "$1")
-        console.log(value.split('/'))
         # Hacky way to make demo work
         if value.split('/')[0] == 'textures'
           uniform['value'] = THREE.ImageUtils.loadTexture(value)
