@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shdr Editor</title>
+  <meta name="description" content="Shdr is a live ESSL (GLSL) shader editor, viewer and validator powered by WebGL and built by Thibaut Despoulain (BKcore).">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="9aMzbIqnVsSKifyPR9OdN8HoKfTbsE3W8lSQ9M66zwk">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="shortcut icon" href="/favicon.png" type="image/png">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="fonts/font-awesome/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="fonts/ubuntu-mono/font.css">
+</head>
+<body>
+
+<!-- inline preloader -->
+<div id="main-loader" style="position: absolute; z-index: 10000; top: 0; bottom: 0; left: 0; right: 0; background: #000; color: #000; font-family: Arial, 'Ubuntu sans', sans-serif; font-size: 32px; font-weight: bold;">
+  <div style="position: absolute; z-index: 10001; top: 50%; left: 0; width: 100%; background: #191919; text-align: center; line-height: 60px; margin-top: -30px; border-top: 1px solid #333; border-bottom: 1px solid #333;">
+    <img src="img/loader.gif" height="32" width="32" alt="Loading..." style="margin-bottom: -4px"> Fetching stuff.
+  </div>
+</div>
+
+<!-- app structure -->
+<div id="panel-top">
+  <div class="menu" id="menu-new" data-action="new">
+    <button type="button" class="menu-trigger  menu-icon-only"><i class="icon-file"></i></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
+      <button type="button" class="menu-item" data-index="cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-load" data-action="load">
+    <button type="button" class="menu-trigger menu-icon-only"><i class="icon-folder-open-alt"></i></button>
+    <div class="menu-list"></div>
+  </div>
+  <div class="menu" id="menu-save" data-action="save">
+    <button type="button" class="menu-button  menu-icon-only"><i class="icon-save"></i></button>
+  </div>
+  <div class="menu" id="menu-name" data-action="name">
+    <div class="menu-blank">
+      <input type="text" value="Untitled" id="save-name">
+    </div>
+  </div>
+  <div class="menu" id="menu-remove" data-action="remove">
+    <button type="button" class="menu-trigger menu-icon-only"><i class="icon-trash"></i></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="confirm">Confirm</button>
+      <button type="button" class="menu-item" data-index="cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-mode" data-action="mode">
+    <button type="button" class="menu-trigger"><i class="icon-pencil"></i><span>Fragment</span></button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="0">Fragment</button>
+      <button type="button" class="menu-item" data-index="1">Vertex</button>
+      <button type="button" class="menu-item" data-index="2">Uniforms</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-update" data-action="update">
+    <button type="button" class="menu-trigger"><i class="icon-circle"></i>Auto update</button>
+    <div class="menu-list">
+      <button type="button" class="menu-item" data-index="0"><i class="icon-circle"></i>Auto Update</button>
+      <button type="button" class="menu-item" data-index="1"><i class="icon-adjust"></i>ENTER Update</button>
+      <button type="button" class="menu-item" data-index="2"><i class="icon-circle-blank"></i>Ctrl+S Update</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-snippets" data-action="snippets">
+    <button type="button" class="menu-trigger"><i class="icon-plus"></i>Snippets</button>
+    <div class="menu-list"></div>
+  </div>
+  <div class="menu" id="menu-download" data-action="download">
+    <button type="button" class="menu-button"><i class="icon-download-alt"></i>Download</button>
+  </div>
+  <div class="menu" id="menu-upload" data-action="upload">
+    <button type="button" class="menu-button"><i class="icon-upload-alt"></i>Upload Model</button>
+  </div>
+  <div class="menu" id="menu-texture" data-action="texture">
+    <button type="button" class="menu-button"><i class="icon-upload-alt"></i>Upload Texture</button>
+  </div>
+  <div class="menu" id="menu-share" data-action="share">
+    <button type="button" class="menu-button"><i class="icon-share-alt"></i>Share</button>
+  </div>
+  <!-- LEFT/RIGHT -->
+  <div class="menu menu-right" id="menu-models" data-action="models">
+    <button type="button" class="menu-trigger"><i class="icon-reorder"></i><span>Suzanne (high)</span></button>
+    <div class="menu-list"></div>
+  </div>
+  <div class="menu menu-right" id="menu-rotate" data-action="rotate">
+    <button type="button" class="menu-toggle menu-icon-only" data-current="0" data-off="1" data-on="0">
+      <i class="icon-play" data-on="icon-pause" data-off="icon-play"></i>
+    </button>
+  </div>
+</div>
+
+<div id="panel-main">
+  <div id="panel-left">
+    <div id="editor"></div>
+  </div>
+  <div id="panel-right">
+    <div id="viewer"></div>
+    <div id="shdr">Shdr</div>
+    <div id="model-loader">
+      <img src="img/loader.gif" height="32" width="32" alt="Loading model...">
+    </div>
+  </div>
+</div>
+
+<div id="panel-bottom">
+  <div id="status">
+    <span class="status-success"><i class="icon-ok-sign"></i><b>Ready</b></span>
+  </div>
+  <div id="footer">
+    <div class="menu menu-right menu-status" id="menu-about" data-action="about">
+      <button type="button" class="menu-button"><i class="icon-info-sign"></i>About Shdr</button>
+    </div>
+    <div class="menu menu-right menu-status" id="menu-help" data-action="help">
+      <button type="button" class="menu-button"><i class="icon-question-sign"></i>Help</button>
+    </div>
+  </div>
+</div>
+
+<div id="box-upload" class="box">
+  <h1 class="title">Upload Model File</h1>
+  <div class="content">
+     <input type="file" name="object" id='box-upload-input' accept='.js'>
+     <button id="box-upload-submit" class="menu-button">Upload</button>
+  </div>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="box-texture" class="box">
+  <h1 class="title">Upload Texture File</h1>
+  <div class="content">
+     <p> Your texture can be accessed as a uniform in the 'Uniforms' tab. </p>
+     <p> Example code is available in snippets under 'Texture' </p>
+     <input type="file" name="object" id='box-texture-input'>
+     <button id="box-texture-submit" class="menu-button">Upload</button>
+  </div>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="box-share" class="box">
+  <h1 class="title">Share URL</h1>
+  <div class="content">
+    <input type="text" value="" id="box-share-url" readonly><button id="box-share-shorten" class="menu-button">Shorten</button>
+  </div>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="box-about" class="box">
+  <h1 class="title">About Shdr</h1>
+  <div class="content">
+    <p>
+      Shdr is an online ESSL (GLSL) shader editor, viewer and validator powered by WebGL.
+    </p>
+    <p>
+      <b>Author:</b> <a href="bkcore.com" target="_blank">Thibaut Despoulain</a>
+      <br><b>Version:</b> 0.1.130311
+    </p>
+    <p>
+      Inspired by MrDoob's live HTML editor.
+      <br>Powered by Three.js, Ace.js, RawDeflate.js and jQuery.
+      <br>Icons by FontAwesome, Suzanne from Blender, HexMKII from HexGL.
+    </p>
+    <p>
+      Issues, feature requests, contributions:
+      <a href="https://github.com/BKcore/Shdr" target="_blank">Fork me on GitHub!</a>
+    </p>
+  </div>
+  <button type="button" class="close">
+    <i class="icon-remove"></i>
+  </button>
+</div>
+
+<div id="mid-separator"></div>
+<div id="top-separator"></div>
+<div id="bottom-separator"></div>
+	
+<script src="build/shdr.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
