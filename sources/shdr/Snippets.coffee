@@ -36,6 +36,22 @@ Snippets =
   # TODO add link to three.js uniform spec?
   'DefaultUniforms': [
     'vec3 testColor = vec3(0.0, 0.0, 1.0);'
+    'sampler2D my_texture = textures/purple_checkers.jpg;'
+  ].join('\n')
+
+  'Texture': [
+    'precision highp float;'
+    'uniform float time;'
+    'uniform vec2 resolution;'
+    'varying vec3 fPosition;'
+    'varying vec3 fNormal;'
+    'uniform sampler2D my_texture;'
+    ''
+    'void main()'
+    '{'
+    '  vec4 color = texture2D(my_texture, vec2(fNormal.x, fNormal.y));'
+    '  gl_FragColor = vec4(color.x, color.y, color.z, 1.0);'
+    '}'
   ].join('\n')
 
   'DemoVertex': [

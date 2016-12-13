@@ -69,6 +69,7 @@ class UI
     submitbutton = @boxes.texture.find('#box-texture-submit')
     submitbutton.on 'click', (e) =>
        inputTexture = texfile[0].files[0]
+       console.log(inputTexture)
        @app.texture(inputTexture)
        @boxes.texture.fadeOut(200)
     shareurl = @boxes.share.find('#box-share-url')

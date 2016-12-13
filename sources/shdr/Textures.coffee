@@ -1,6 +1,7 @@
 Textures = 
 
-   'models/test.jpg':
+   'textures/purple_checkers.jpg':
      name: 'test.jpg'
+
 @shdr ||= {}
-@shdr.Models = Models
+@shdr.Textures = Textures

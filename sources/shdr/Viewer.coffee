@@ -130,9 +130,15 @@ class Viewer
           vectorVals[2], vectorVals[3])
       else if type =='sampler2D'
         uniform['type'] = 't'
-        THREE.ImageUtils.crossOrigin = ''
-        console.log(value)
-        uniform['value'] = THREE.ImageUtils.loadTexture(value)
+        # Remove quotes from string
+        value = value.replace(/^"(.*)"$/, '$1')
+        value = value.replace(/^"(.*)"$/, "$1")
+        console.log(value.split('/'))
+        # Hacky way to make demo work
+        if value.split('/')[0] == 'textures'
+          uniform['value'] = THREE.ImageUtils.loadTexture(value)
+        else
+          uniform['value'] = THREE.ImageUtils.loadTexture(shdr.Textures[value].data)
       uniformObj[name] = uniform
 
     return uniformObj
