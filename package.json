@@ -2,7 +2,9 @@
   "name": "shdr",
   "version": "0.0.1",
   "scripts": {
-    "start": "node build/build.js --output=./sources/build/shdr.js && node node_modules/http-server/bin/http-server sources"
+    "start": "node build/build.js --output=./sources/build/shdr.js && node node_modules/http-server/bin/http-server sources",
+    "build": "node build/build.js --output=./sources/build/shdr.js --minify",
+    "build-extension": "node build/build.js --output=./build/shdr.js --minify --chromeapp"
   },
   "dependencies": {
     "argparse": "latest",
