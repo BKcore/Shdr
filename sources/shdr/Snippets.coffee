@@ -36,7 +36,7 @@ Snippets =
   # TODO add link to three.js uniform spec?
   'DefaultUniforms': [
     'vec3 testColor = vec3(0.0, 0.0, 1.0);'
-    'sampler2D my_texture = textures/purple_checkers.jpg;'
+    'sampler2D my_texture = "textures/purple_checkers.jpg";'
   ].join('\n')
 
   'Texture': [
