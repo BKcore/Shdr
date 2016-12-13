@@ -89,16 +89,31 @@ class Viewer
   parseUniforms: (uniformStr) ->
     toParse = uniformStr.split(';')
     uniformObj = {}
+    lineNum = 0
 
     for line in toParse
-      if (!line.length)
+      lineNum += 1
+      
+      if (!line.trim().length)
         continue
 
       tokens = line.trim().split(' ')
+      
+      if (!tokens.length)
+        continue
+
+      if (tokens.length < 4)
+        console.log('invalid syntax at line ' + lineNum)
+        continue
+      
       type = tokens[0]
       name = tokens[1]
       value = tokens.slice(3).join('')
-      
+  
+      if (tokens[2] != '=')
+        console.log('invalid syntax at line ' + lineNum + ': expected =')
+        continue
+  
       uniform = {}
 
       # Get the type of the uniform
@@ -112,19 +127,29 @@ class Viewer
         uniform['type'] = 'i'
         uniform['value'] = value == 'true' ? 1 : 0
       else if type == 'vec2'
-        vectorVals = value.slice(5, value.length - 1).split(',').map(
-          parseFloat)
+        vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
+        if (vectorVals.length != 2)
+          console.log('invalid syntax at line ' + lineNum +
+            ': wrong number of arguments')
+          continue
         uniform['type'] = 'v2'
         uniform['value'] = new THREE.Vector2(vectorVals[0], vectorVals[1])
       else if type == 'vec3'
-        vectorVals = value.slice(5, value.length - 1).split(',').map(
-          parseFloat)
+        vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
+        if (vectorVals.length != 3)
+          console.log('invalid syntax at line ' + lineNum +
+            ': wrong number of arguments')
+          continue
         uniform['type'] = 'v3'
         console.log(value)
         uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
           vectorVals[2])
       else if type == 'vec4'
-        vectorVals = value[4:-1].split(', ').map(parseFloat)
+        vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
+        if (vectorVals.length != 4)
+          console.log('invalid syntax at line ' + lineNum +
+            ': wrong number of arguments')
+          continue
         uniform['type'] = 'v4'
         uniform['value'] = new THREE.Vector4(vectorVals[0], vectorVals[1],
           vectorVals[2], vectorVals[3])
