@@ -84,9 +84,7 @@ class App
         newUniforms = session.getValue()
         @viewer.updateShader(newUniforms, App.UNIFORMS)
       catch e
-        # TODO show an error on the UI here
-        console.log("uniform compilation failed")
-        console.log(e)
+        @ui.setStatus('Uniform compilation failed', shdr.UI.ERROR)
       return
     else
       type = shdr.Validator.VERTEX

@@ -1,7 +1,7 @@
 Textures = 
 
    'textures/purple_checkers.jpg':
-     name: 'test.jpg'
+     name: 'textures/purple_checkers.jpg'
 
 @shdr ||= {}
 @shdr.Textures = Textures
