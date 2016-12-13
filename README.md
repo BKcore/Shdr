@@ -24,8 +24,6 @@ To build and run with npm:
 npm install
 npm start
 ```
-<<<<<<< HEAD
-=======
 To build only the js package:
 ```
 npm build
