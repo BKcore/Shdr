@@ -148,7 +148,6 @@ class Viewer
                         ': wrong number of arguments', shdr.UI.ERROR)
           error = true
         uniform['type'] = 'v3'
-        console.log(value)
         uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
           vectorVals[2])
       else if type == 'vec4'
@@ -179,7 +178,6 @@ class Viewer
         @app.marker = session.highlightLines(lineNum - 1, lineNum - 1)
         continue
 
-    console.log(uniformObj)
     return uniformObj
 
   addCustomUniforms: (uniformsObj) ->
@@ -190,10 +188,8 @@ class Viewer
   defaultMaterial: ->
     @resetUniforms()
     @addCustomUniforms(@parseUniforms(shdr.Snippets.DefaultUniforms))
-    console.log(@uniforms)
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
-    console.log(@uniforms)
     return new THREE.ShaderMaterial(
       uniforms: @uniforms
       vertexShader: @vs
