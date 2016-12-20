@@ -117,12 +117,11 @@ class App
       uniforms = @documents[App.UNIFORMS]
       [_fs, fl, fm] = @validator.validate(fs, shdr.Validator.FRAGMENT)
       [_vs, vl, vm] = @validator.validate(vs, shdr.Validator.VERTEX)
-      # TODO validate uniforms
       @viewer.updateShader(uniforms, App.UNIFORMS)
       if _fs and _vs
         @viewer.updateShader(vs, App.VERTEX)
         @viewer.updateShader(fs, App.FRAGMENT)
-        @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)        
+        @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)
         @ui.setMenuMode(App.FRAGMENT)
         @ui.setStatus("Shaders successfully loaded and compiled.",
           shdr.UI.SUCCESS)
