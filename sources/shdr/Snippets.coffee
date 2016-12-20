@@ -29,13 +29,13 @@ Snippets =
     ''
     'void main()'
     '{'
-    '  gl_FragColor = vec4(testColor, 1.0);'
+    '  gl_FragColor = vec4(fNormal, 1.0);'
     '}'
   ].join('\n')
 
   'DefaultUniforms': [
     'vec3 testColor = vec3(0.0, 0.0, 1.0);'
-    'sampler2D my_texture = "textures/purple_checkers.jpg";'
+    'sampler2D my_texture = "textures/beanie.jpg";'
   ].join('\n')
 
   'Texture': [

@@ -87,6 +87,7 @@ class Viewer
 
   # Parses lines of uniforms in the form 'type id = value;'
   parseUniforms: (uniformStr) ->
+    error = false
     toParse = uniformStr.split(';')
     uniformObj = {}
     lineNum = 0
@@ -103,15 +104,21 @@ class Viewer
         continue
 
       if (tokens.length < 4)
-        console.log('invalid syntax at line ' + lineNum)
+        @app.ui.setStatus('Invalid syntax at line ' + lineNum, shdr.UI.ERROR)
+        session = @app.editor.getSession()
+        @app.marker = session.highlightLines(lineNum - 1, lineNum - 1)
+        error = true
         continue
 
       type = tokens[0]
       name = tokens[1]
-      value = tokens.slice(3).join('')
+      value = tokens.slice(3).join(' ')
 
       if (tokens[2] != '=')
-        console.log('invalid syntax at line ' + lineNum + ': expected =')
+        @app.ui.setStatus('Invalid syntax at line ' + lineNum + ': expected =', shdr.UI.ERROR)
+        session = @app.editor.getSession()
+        @app.marker = session.highlightLines(lineNum - 1, lineNum - 1)
+        error = true
         continue
 
       uniform = {}
@@ -129,17 +136,17 @@ class Viewer
       else if type == 'vec2'
         vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
         if (vectorVals.length != 2)
-          console.log('invalid syntax at line ' + lineNum +
-            ': wrong number of arguments')
-          continue
+          @app.ui.setStatus('Invalid syntax at line ' + lineNum +
+                         ': wrong number of arguments', shdr.UI.ERROR)
+          error = true
         uniform['type'] = 'v2'
         uniform['value'] = new THREE.Vector2(vectorVals[0], vectorVals[1])
       else if type == 'vec3'
         vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
         if (vectorVals.length != 3)
-          console.log('invalid syntax at line ' + lineNum +
-            ': wrong number of arguments')
-          continue
+          @app.ui.setStatus('Invalid syntax at line ' + lineNum +
+                        ': wrong number of arguments', shdr.UI.ERROR)
+          error = true
         uniform['type'] = 'v3'
         console.log(value)
         uniform['value'] = new THREE.Vector3(vectorVals[0], vectorVals[1],
@@ -147,24 +154,32 @@ class Viewer
       else if type == 'vec4'
         vectorVals = value.slice(5, value.length - 1).split(',').map(parseFloat)
         if (vectorVals.length != 4)
-          console.log('invalid syntax at line ' + lineNum +
-            ': wrong number of arguments')
-          continue
+          @app.ui.setStatus('Invalid syntax at line ' + lineNum +
+                        ': wrong number of arguments', shdr.UI.ERROR)
+          error = true
         uniform['type'] = 'v4'
         uniform['value'] = new THREE.Vector4(vectorVals[0], vectorVals[1],
           vectorVals[2], vectorVals[3])
       else if type =='sampler2D'
         uniform['type'] = 't'
-        # Remove quotes from string
+        # Remove single and double quotes from start and end of string
         value = value.replace(/^"(.*)"$/, '$1')
         value = value.replace(/^"(.*)"$/, "$1")
-        # Hacky way to make demo work
-        if value.split('/')[0] == 'textures'
-          uniform['value'] = THREE.ImageUtils.loadTexture(value)
-        else
-          uniform['value'] = THREE.ImageUtils.loadTexture(shdr.Textures[value].data)
-      uniformObj[name] = uniform
+        uniform['value'] = THREE.ImageUtils.loadTexture(shdr.Textures[value].data)
+      else
+        @app.ui.setStatus('Unrecognized uniform type at line ' + lineNum +
+                          ': ' + type, shdr.UI.ERROR)
+        error = true
 
+      if !error
+        uniformObj[name] = uniform
+        @app.ui.setStatus('Uniforms successfully compiled', shdr.UI.SUCCESS)
+      else
+        session = @app.editor.getSession()
+        @app.marker = session.highlightLines(lineNum - 1, lineNum - 1)
+        continue
+
+    console.log(uniformObj)
     return uniformObj
 
   addCustomUniforms: (uniformsObj) ->
@@ -175,6 +190,7 @@ class Viewer
   defaultMaterial: ->
     @resetUniforms()
     @addCustomUniforms(@parseUniforms(shdr.Snippets.DefaultUniforms))
+    console.log(@uniforms)
     @vs = shdr.Snippets.DefaultVertex
     @fs = shdr.Snippets.DefaultFragment
     console.log(@uniforms)
