@@ -20,6 +20,8 @@ class App
     @extend(@conf, conf)
     @ui = new shdr.UI(@)
     return if not @initViewer(domCanvas)
+    if window.location.search.substring(1) == 'editor'
+      @ui.hideViewer()
     @initEditor(domEditor)
     @initFromURL()
     @byId(domEditor).addEventListener('keyup', ((e) => @onEditorKeyUp(e)), off)

@@ -15,6 +15,11 @@ class UI
     @initBoxes()
     @resetLoadFiles()
 
+  hideViewer: ->
+    $('#panel-right').fadeOut(100)
+    $('#panel-left').css('right', '0%')
+    $('#mid-separator').css('left', '100%')
+
   hideMainLoader: ->
     $('#main-loader').fadeOut(400)
 
