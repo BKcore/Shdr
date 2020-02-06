@@ -54,16 +54,24 @@ class UI
   initBoxes: ->
     @boxes =
       upload: $('#box-upload')
+      texture: $('#box-texture')
       share: $('#box-share')
       about: $('#box-about')
     $('.box .close').on 'click', (e) ->
       $(this).parent().fadeOut(200)
-    objfile = @boxes.upload.find('#box-upload-input')
+    objFile = @boxes.upload.find('#box-upload-input')
     submitbutton = @boxes.upload.find('#box-upload-submit')
     submitbutton.on 'click', (e) =>
-       inputFile = objfile[0].files[0]
+       inputFile = objFile[0].files[0]
        @app.upload(inputFile)
        @boxes.upload.fadeOut(200)
+    texfile = @boxes.texture.find('#box-texture-input')
+    submitbutton = @boxes.texture.find('#box-texture-submit')
+    submitbutton.on 'click', (e) =>
+       inputTexture = texfile[0].files[0]
+       console.log(inputTexture)
+       @app.texture(inputTexture)
+       @boxes.texture.fadeOut(200)
     shareurl = @boxes.share.find('#box-share-url')
     shortenurl = @boxes.share.find('#box-share-shorten')
     shareurl.on 'click', (e) ->
@@ -112,7 +120,7 @@ class UI
   addNewModel: (modelName, key) ->
     list = $('#menu-models .menu-list')
     button = $('<button>').addClass('menu-item')
-    list.append(button.clone().text(modelName)
+    list.append(button.clone().text(modelName.charAt(0).toUpperCase() + modelName.split('.')[0].slice(1))
     .attr('data-index', key))
 
   setStatus: (message, type=UI.ERROR) ->
@@ -232,6 +240,11 @@ class UI
     @app.updateDocument()
     boxupload = $('#box-upload')
     @boxes.upload.fadeIn(200)
+
+  textureAction: ->
+    @app.updateDocument()
+    boxupload = $('#box-texture')
+    @boxes.texture.fadeIn(200)
 
   downloadAction: ->
     @app.download()

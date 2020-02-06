@@ -7,11 +7,14 @@ Snippets =
     'uniform mat3 normalMatrix;'
     'uniform mat4 modelViewMatrix;'
     'uniform mat4 projectionMatrix;'
+    'uniform mat2 faceVertexUvs;'
     'varying vec3 fNormal;'
     'varying vec3 fPosition;'
+    'varying vec2 vUv;'
     ''
     'void main()'
     '{'
+    '  vUv = faceVertexUvs * vec2(1, 1);'
     '  fNormal = normalize(normalMatrix * normal);'
     '  vec4 pos = modelViewMatrix * vec4(position, 1.0);'
     '  fPosition = pos.xyz;'
@@ -25,10 +28,32 @@ Snippets =
     'uniform vec2 resolution;'
     'varying vec3 fPosition;'
     'varying vec3 fNormal;'
+    'varying vec2 vUv;'
+    'uniform vec3 testColor;'
     ''
     'void main()'
     '{'
     '  gl_FragColor = vec4(fNormal, 1.0);'
+    '}'
+  ].join('\n')
+
+  'DefaultUniforms': [
+    'vec3 testColor = vec3(0.0, 0.0, 1.0);'
+    'sampler2D my_texture = "textures/beanie.jpg";'
+  ].join('\n')
+
+  'Texture': [
+    'precision highp float;'
+    'uniform float time;'
+    'uniform vec2 resolution;'
+    'varying vec3 fPosition;'
+    'varying vec3 fNormal;'
+    'uniform sampler2D my_texture;'
+    ''
+    'void main()'
+    '{'
+    '  vec4 color = texture2D(my_texture, vec2((0.4 * fNormal.x) + 0.6, (0.4 * fNormal.y) + 0.4));'
+    '  gl_FragColor = vec4(color.x, color.y, color.z, 1.0);'
     '}'
   ].join('\n')
 

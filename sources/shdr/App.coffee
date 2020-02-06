@@ -5,12 +5,13 @@ class App
   @UPDATE_MANUAL: 2
   @FRAGMENT: 0
   @VERTEX: 1
+  @UNIFORMS: 2
 
   constructor: (domEditor, domCanvas, conf={}) ->
     # CUSTOM THREE.JS HACK
     window.THREE_SHADER_OVERRIDE = true
     @initBaseurl()
-    @documents = ['', '']
+    @documents = ['', '', '']
     @marker = null
     @viewer = null
     @validator = null
@@ -55,6 +56,7 @@ class App
   initEditor: (domEditor) ->
     @documents[App.FRAGMENT] = @viewer.fs
     @documents[App.VERTEX] = @viewer.vs
+    @documents[App.UNIFORMS] = shdr.Snippets.DefaultUniforms
     @editor = ace.edit(domEditor)
     @editor.setFontSize("16px")
     @editor.setShowPrintMargin(off)
@@ -77,6 +79,13 @@ class App
     session.removeMarker(@marker.id) if @marker?
     if @conf.mode is App.FRAGMENT
       type = shdr.Validator.FRAGMENT
+    else if @conf.mode is App.UNIFORMS
+      try
+        newUniforms = session.getValue()
+        @viewer.updateShader(newUniforms, App.UNIFORMS)
+      catch e
+        @ui.setStatus('Uniform compilation failed', shdr.UI.ERROR)
+      return
     else
       type = shdr.Validator.VERTEX
     src = session.getValue()
@@ -101,16 +110,18 @@ class App
     @initDocuments(obj)
 
   initDocuments: (obj) ->
-    if obj and obj.documents and obj.documents.length is 2
+    if obj and obj.documents
       @documents = obj.documents
       fs = @documents[App.FRAGMENT]
       vs = @documents[App.VERTEX]
+      uniforms = @documents[App.UNIFORMS]
       [_fs, fl, fm] = @validator.validate(fs, shdr.Validator.FRAGMENT)
       [_vs, vl, vm] = @validator.validate(vs, shdr.Validator.VERTEX)
+      @viewer.updateShader(uniforms, App.UNIFORMS)
       if _fs and _vs
         @viewer.updateShader(vs, App.VERTEX)
         @viewer.updateShader(fs, App.FRAGMENT)
-        @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)        
+        @editor.getSession().setValue(if @conf.mode is App.VERTEX then vs else fs)
         @ui.setMenuMode(App.FRAGMENT)
         @ui.setStatus("Shaders successfully loaded and compiled.",
           shdr.UI.SUCCESS)
@@ -186,13 +197,27 @@ class App
             shdr.UI.WARNING)
         console.warn 'ERROR: ', e
 
+  texture: (textureObj) ->
+    try
+      @ui.setStatus('Uploading...', shdr.UI.WARNING)
+      reader = new FileReader()
+      reader.readAsDataURL textureObj
+      console.log(textureObj)
+      reader.onload = (e) =>
+        console.log("onload happened")
+        texture = {name: textureObj.name, data: e.target.result}
+        shdr.Textures[texture.name] = texture
+        @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
+    catch e
+      @ui.setStatus('You must select a texture to upload.', shdr.UI.WARNING)
+
   upload: (fileObj) ->
     try
       @ui.setStatus('Uploading...', shdr.UI.WARNING)
       reader = new FileReader()
       reader.readAsDataURL fileObj
       reader.onload = (e) =>
-        model = {name: fileObj.name, data: e.target.result}
+        model = {name: fileObj.name.split('.')[0], data: e.target.result}
         shdr.Models[e.target.result] = model
         @ui.setStatus('Uploaded', shdr.UI.SUCCESS)
         @ui.addNewModel(fileObj.name, e.target.result)
@@ -241,6 +266,7 @@ class App
       documents: [
         shdr.Snippets.DefaultFragment
         shdr.Snippets.DefaultVertex
+        shdr.Snippets.DefaultUniforms
       ]
       name: 'Untitled'
     @initDocuments(obj)
@@ -323,6 +349,9 @@ class App
       when App.VERTEX
         @documents[old] = session.getValue() if not force
         session.setValue(@documents[App.VERTEX])
+      when App.UNIFORMS
+        @documents[old] = session.getValue() if not force
+        session.setValue(@documents[App.UNIFORMS])
     @updateShader()
     this
 

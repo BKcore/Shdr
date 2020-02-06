@@ -23,6 +23,7 @@ var files = [
 	base+"libs/zip/rawinflate.js",
 	base+"shdr/App.js",
 	base+"shdr/Models.js",
+	base+"shdr/Textures.js",
 	base+"shdr/Snippets.js",
 	base+"shdr/Storage.js",
 	base+"shdr/UI.js",
