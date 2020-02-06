@@ -286,7 +286,7 @@ button::-moz-focus-inner {
   margin: 0;
   padding: 12px;
   padding-top: 16px;
-  color: #040404;
+  color: #fff;
   text-shadow: 0px 1px 0px #333;
   filter: dropshadow(color=#333, offx=0, offy=1);
 }
